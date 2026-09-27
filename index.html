@@ -1,0 +1,2302 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pisupati Raghavendra Sree Suhaas — iOS 27 Liquid Glass Portfolio</title>
+<link rel="icon" type="image/png" href="logo.png">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&amp;family=Playfair+Display:ital,wght@0,400..800;1,400..800&amp;family=JetBrains+Mono:wght@300;400;500;600&amp;family=Inter:wght@200;300;400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Press+Start+2P&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+  .font-pixel {
+    font-family: 'Silkscreen', 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+  }
+</style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            vindey: ['"Wasted Vindey"', '"Cinzel Decorative"', '"Playfair Display"', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    :root {
+      --background: #ffffff;
+      --foreground: #000000;
+      --muted: #666666;
+      --glass: rgba(255, 255, 255, 0.65);
+      --border: rgba(0, 0, 0, 0.10);
+      --glass-card: rgba(255, 255, 255, 0.75);
+      --glass-pill: rgba(255, 255, 255, 0.70);
+      --button-bg: #000000;
+      --button-text: #ffffff;
+    }
+
+    .dark {
+      --background: #000000;
+      --foreground: #ffffff;
+      --muted: #a3a3a3;
+      --glass: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.14);
+      --glass-card: rgba(255, 255, 255, 0.05);
+      --glass-pill: rgba(18, 18, 20, 0.72);
+      --button-bg: #ffffff;
+      --button-text: #000000;
+    }
+
+    .font-wasted-vindey {
+      font-family: 'Wasted Vindey', 'Cinzel Decorative', 'Playfair Display', serif;
+      letter-spacing: 0.04em;
+    }
+
+    html { background: #000; }
+    html:not(.dark) { background: #fff; }
+    body { background: transparent !important; }
+    #gl {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      z-index: 0;
+      pointer-events: none;
+      display: block;
+      touch-action: none;
+    }
+    main, header { position: relative; z-index: 10; }
+    img { max-width: 100%; height: auto; }
+    canvas { max-width: none; }
+    #darkShade { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: #000; opacity: 0; transition: opacity .5s ease; }
+    .dark #darkShade { opacity: .52; }
+    * { -webkit-tap-highlight-color: transparent; }
+    body { touch-action: manipulation; overflow-x: clip; }
+    html { scroll-behavior: smooth; }
+    html.dark { background: #000 !important; color-scheme: dark; }
+    html.dark body { background: transparent !important; color: #fff !important; }
+    .dark header, .dark main, .dark footer, .dark section { background: transparent !important; }
+    /* 3D SCENE DEPTH */
+    main { perspective: 1600px; }
+    section { transform-style: preserve-3d; }
+    .tilt-card { transform-style: preserve-3d; will-change: transform; }
+    .tilt-card h3, .tilt-card h4 { transform: translateZ(30px); }
+    /* SCROLL / ENTRANCE ANIMATIONS */
+    @keyframes heroRise { from { opacity: 0; transform: translateY(34px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+    @keyframes pulseGlow { 0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,.14); } 50% { box-shadow: 0 0 26px 2px rgba(255,255,255,.16); } }
+    .hero-enter { animation: heroRise .9s cubic-bezier(.16,1,.3,1) both; }
+    .hero-enter-1 { animation-delay: .05s; } .hero-enter-2 { animation-delay: .16s; }
+    .hero-enter-3 { animation-delay: .28s; } .hero-enter-4 { animation-delay: .4s; }
+    .float-slow { animation: floatY 7s ease-in-out infinite; }
+    /* CUSTOM CURSOR (desktop only) */
+    #cursorDot, #cursorRing { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; border-radius: 9999px; }
+    #cursorDot { width: 8px; height: 8px; background: #fff; mix-blend-mode: difference; transform: translate(-50%,-50%); box-shadow: 0 0 14px 3px rgba(255,255,255,.9); }
+    #cursorRing { width: 36px; height: 36px; border: 2px solid #fff; mix-blend-mode: difference; opacity: .9; transform: translate(-50%,-50%); transition: width .25s, height .25s, opacity .25s; box-shadow: 0 0 18px 1px rgba(255,255,255,.35); }
+    #cursorRing.grow { width: 60px; height: 60px; opacity: 1; }
+    #cursorRing.click { width: 22px; height: 22px; opacity: 1; }
+    @media (hover: none), (pointer: coarse) { #cursorDot, #cursorRing { display: none; } }
+    /* iOS 27 LIQUID GLASS — animated light sweep across every glass card */
+    .liquid-glass::before {
+      content: ''; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; z-index: 1;
+      background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.11) 50%, transparent 58%);
+      transform: translateX(-14%); opacity: .8;
+      animation: glassSweep 8s ease-in-out infinite;
+    }
+    .dark .liquid-glass::before {
+      background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.13) 50%, transparent 58%);
+    }
+    @keyframes glassSweep { 0%,100% { transform: translateX(-14%); opacity: .65; } 50% { transform: translateX(14%); opacity: 1; } }
+    .liquid-glass > * { position: relative; z-index: 2; }
+    @media (hover: none), (pointer: coarse) { .liquid-glass::before { animation-duration: 13s; } }
+    @media (prefers-reduced-motion: reduce) { .liquid-glass::before, .float-slow, .hero-enter { animation: none !important; } }
+    /* TRUE-BLACK DARK THEME — every surface pure black */
+    html.dark, html.dark body { background: #000 !important; }
+    .dark .liquid-glass-pill { background: rgba(0,0,0,.85) !important; border-color: rgba(255,255,255,.16) !important; }
+    .dark input, .dark textarea { background: rgba(255,255,255,.06) !important; color: #fff !important; border-color: rgba(255,255,255,.14) !important; }
+    .dark input::placeholder, .dark textarea::placeholder { color: #71717a !important; }
+    .dark #snake { background: #000 !important; border: 1px solid rgba(255,255,255,.16); }
+    .dark #certModal > div, .dark #resumeModal > div { background: rgba(0,0,0,.82) !important; }
+    .dark footer { background: rgba(0,0,0,.6) !important; }
+    .dark ::-webkit-scrollbar-track { background: #000; }
+    /* SNAKE ARCADE */
+    #snake { image-rendering: pixelated; touch-action: none; width: 100%; height: auto; border-radius: 1rem; background: #000; }
+    .snake-btn { transition: transform .15s ease, opacity .15s ease; }
+    .snake-btn:active { transform: scale(.94); }
+
+    .liquid-glass {
+      background: var(--glass-card);
+      backdrop-filter: blur(36px) saturate(160%);
+      -webkit-backdrop-filter: blur(36px) saturate(160%);
+      border: 1px solid var(--border);
+      box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+      position: relative;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .liquid-glass-pill {
+      background: var(--glass-pill);
+      backdrop-filter: blur(30px) saturate(130%);
+      -webkit-backdrop-filter: blur(30px) saturate(130%);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .project-card.hidden-filter {
+      display: none;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(128, 128, 128, 0.4);
+      border-radius: 9999px;
+    }
+  </style>
+<style>
+.tilt-card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  position: relative;
+  overflow: hidden;
+}
+.tilt-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle 280px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.18), transparent 80%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  mix-blend-mode: overlay;
+}
+.tilt-card:hover::after {
+  opacity: 1;
+}
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style><style id="font-legibility-styles">
+  .font-pixel {
+    font-family: 'Silkscreen', 'Press Start 2P', 'JetBrains Mono', monospace, sans-serif !important;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+  }
+  .dark .font-pixel.text-hero-name {
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+  }
+  html:not(.dark) .font-pixel.text-hero-name {
+    color: #0F172A !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  }
+  .dark .text-hero-headline {
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
+  }
+  html:not(.dark) .text-hero-headline {
+    color: #0F172A !important;
+  }
+  .dark .text-hero-sub {
+    color: #E2E8F0 !important;
+  }
+  html:not(.dark) .text-hero-sub {
+    color: #334155 !important;
+  }
+  .dark .text-hero-bio {
+    color: #CBD5E1 !important;
+  }
+  html:not(.dark) .text-hero-bio {
+    color: #475569 !important;
+  }
+  .dark .liquid-glass {
+    background: rgba(0, 0, 0, 0.72) !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
+    backdrop-filter: blur(36px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(36px) saturate(160%) !important;
+  }
+  html:not(.dark) .liquid-glass {
+    background: rgba(255, 255, 255, 0.62) !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    backdrop-filter: blur(36px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(36px) saturate(160%) !important;
+  }
+  @media (max-width: 640px) {
+    .liquid-glass { backdrop-filter: blur(24px) saturate(150%) !important; -webkit-backdrop-filter: blur(24px) saturate(150%) !important; }
+    #gl { width: 100vw; height: 100dvh; }
+  }
+  @media (hover: none), (pointer: coarse) {
+    .tilt-card { transform: none !important; }
+    .tilt-card::after { display: none; }
+  }
+  .dark .liquid-glass p, .dark .liquid-glass li {
+    color: #CBD5E1 !important;
+  }
+  html:not(.dark) .liquid-glass p, html:not(.dark) .liquid-glass li {
+    color: #334155 !important;
+  }
+  .dark h1, .dark h2, .dark h3, .dark h4 {
+    color: #FFFFFF !important;
+  }
+  html:not(.dark) h1, html:not(.dark) h2, html:not(.dark) h3, html:not(.dark) h4 {
+    color: #0F172A !important;
+  }
+</style></head>
+<body class="relative min-h-screen text-[var(--foreground)] font-sans antialiased overflow-x-hidden transition-colors duration-500" style="background:transparent !important"><div class="bg-black dark:bg-white shadow-lg" id="scrollProgress" style="position:fixed;top:0;left:0;height:3px;z-index:9999;width:0%;transition:width 0.1s linear;"></div><div id="cursorDot" aria-hidden="true"></div><div id="cursorRing" aria-hidden="true"></div>
+<!-- SOFFIT WEBGL2 BACKGROUND CANVAS -->
+<canvas id="gl" width="1280" height="8473"></canvas>
+<div id="darkShade" aria-hidden="true"></div>
+<!-- FLOATING LIQUID GLASS NAVBAR -->
+<header class="fixed top-0 inset-x-0 z-50 px-4 sm:px-6 py-3.5 pointer-events-none">
+<div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+<!-- Brand Name in Wasted Vindey -->
+<a class="pointer-events-auto flex items-center gap-3 liquid-glass-pill px-4 py-2 rounded-full hover:scale-105 transition" href="#hero">
+<div class="relative w-7 h-7 rounded-full bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-bold text-xs font-mono overflow-hidden shrink-0">
+          <span>SS</span>
+          <img src="logo.png" alt="Suhaas logo" class="absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
+        </div>
+<div class="flex flex-col">
+<span class="font-pixel text-xs sm:text-sm font-bold text-black dark:text-white leading-tight tracking-wider transition-colors">
+  P.R.S. SUHAAS
+</span>
+<span class="text-[9px] font-mono tracking-widest text-neutral-500 dark:text-neutral-400">
+            ML / AI ENGINEER
+          </span>
+</div>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden lg:flex pointer-events-auto items-center gap-1.5 liquid-glass-pill px-4 py-1.5 rounded-full text-xs font-medium text-neutral-600 dark:text-neutral-300">
+<a class="px-3 py-1.5 rounded-full hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition" href="#experience">Experience</a>
+<a class="px-3 py-1.5 rounded-full hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition" href="#projects">Projects</a>
+<a class="px-3 py-1.5 rounded-full hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition" href="#about">About</a>
+<a class="px-3 py-1.5 rounded-full hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition" href="#skills">Skills</a>
+<a class="px-3 py-1.5 rounded-full hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition" href="#education">Education</a>
+<a class="px-3 py-1.5 rounded-full hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition" href="#certificates">Certificates</a>
+<a class="px-3 py-1.5 rounded-full hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition" href="#resume">Resume</a>
+<a class="px-3 py-1.5 rounded-full hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition" href="#game">Arcade</a>
+<a class="px-3 py-1.5 rounded-full hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition" href="#contact">Contact</a>
+</nav>
+<!-- Right Island: Theme Toggle & Quick Resume -->
+<div class="pointer-events-auto flex items-center gap-2 sm:gap-3">
+<a href="Suhaas-Resume.pdf" download="Pisupati-Raghavendra-Sree-Suhaas-Resume.pdf" class="hidden sm:inline-flex items-center gap-1.5 liquid-glass-pill px-3 py-2 rounded-full text-xs font-mono font-medium hover:bg-black/5 dark:hover:bg-white/10 transition">
+<i class="fa-solid fa-file-lines text-xs"></i>
+<span class="">Resume</span>
+</a>
+<!-- Monochrome Theme Toggle Bar -->
+<div class="liquid-glass-pill p-1 rounded-full flex items-center gap-1 border border-neutral-300/40 dark:border-white/15" id="themeToggleBar">
+<button class="px-3 py-1 rounded-full text-xs font-medium transition flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white" id="themeLightBtn">
+<i class="fa-solid fa-sun text-[11px]"></i>
+<span class="text-[11px] font-mono hidden md:inline">Light</span>
+</button>
+<button class="px-3 py-1 rounded-full text-xs font-medium transition flex items-center gap-1.5 bg-black/10 dark:bg-white/20 text-neutral-900 dark:text-white shadow-sm font-semibold" id="themeDarkBtn">
+<i class="fa-solid fa-moon text-[11px]"></i>
+<span class="text-[11px] font-mono hidden md:inline">Dark</span>
+</button>
+</div>
+<button class="lg:hidden liquid-glass-pill w-9 h-9 rounded-full flex items-center justify-center text-xs" id="mobileMenuBtn">
+<i class="fa-solid fa-bars"></i>
+</button>
+</div>
+</div>
+<!-- Mobile Navigation Panel -->
+<div class="hidden lg:hidden pointer-events-auto max-w-sm mx-auto mt-2 liquid-glass rounded-2xl p-4 space-y-2 text-sm font-medium" id="mobileMenu">
+<a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10" href="#experience">01. Experience</a>
+<a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10" href="#projects">02. Projects (15)</a>
+<a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10" href="#about">03. About &amp; Photo</a>
+<a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10" href="#skills">04. Technical Skills</a>
+<a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10" href="#education">05. Education (MVGR)</a>
+<a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10" href="#certificates">06. Certificates (9)</a>
+<a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10" href="#resume">07. Resume Viewer</a>
+<a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10" href="#game">08. Snake Arcade</a>
+<a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10" href="#contact">09. Contact Direct</a>
+</div>
+</header>
+<!-- MAIN VIEWPORT CONTAINER -->
+<main class="relative z-10 pt-28 sm:pt-36 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-24 sm:space-y-32">
+<!-- HERO SECTION -->
+<section class="text-center space-y-8 max-w-4xl mx-auto pt-4 sm:pt-6" id="hero" data-parallax="0.06">
+<div class="hero-enter hero-enter-1 inline-flex items-center gap-2 px-4 py-1.5 rounded-full liquid-glass-pill text-xs font-mono tracking-widest text-neutral-800 dark:text-neutral-200">
+<span class="w-2 h-2 rounded-full bg-neutral-900 dark:bg-white animate-ping"></span>
+<span class="">OPEN TO ML ENGINEERING INTERNSHIPS &amp; COLLABORATIONS</span>
+</div>
+<div class="hero-enter hero-enter-2 space-y-3 liquid-glass p-7 sm:p-10 rounded-3xl border border-black/10 dark:border-white/10 dark:bg-white/5 shadow-2xl float-slow"><h2 class="font-pixel text-hero-name text-lg sm:text-2xl md:text-3xl font-bold tracking-widest uppercase drop-shadow-sm pb-1 transition-colors">PISUPATI RAGHAVENDRA SREE SUHAAS</h2><h1 class="font-pixel text-hero-headline text-3xl sm:text-5xl md:text-6xl font-normal tracking-wide leading-tight uppercase transition-colors">BUILDING INTELLIGENT SYSTEMS.</h1><p class="font-pixel text-hero-sub text-xs sm:text-sm tracking-wider pt-2 transition-colors">AI/ML Engineer · Generative AI · Machine Learning · Data Systems</p></div>
+<p class="text-sm sm:text-base text-neutral-500 dark:text-neutral-400 max-w-xl mx-auto leading-relaxed transition-colors text-hero-bio">
+        Computer Science student building scalable, production-grade AI systems — from model inference APIs to data pipelines — at the intersection of Machine Learning, Data Analytics, and real-world engineering.
+      </p>
+<div class="hero-enter hero-enter-3 flex flex-wrap items-center justify-center gap-3 pt-2">
+<a class="px-6 py-3 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm hover:scale-105 active:scale-95 transition shadow-lg flex items-center gap-2 magnetic" href="#projects">
+<span class="">View Projects</span>
+<i class="fa-solid fa-arrow-down text-xs"></i>
+</a>
+<a class="liquid-glass px-6 py-3 rounded-full text-sm font-medium hover:scale-105 active:scale-95 transition flex items-center gap-2" href="#contact">
+<i class="fa-regular fa-envelope"></i>
+<span class="">Get in Touch</span>
+</a>
+<a href="Suhaas-Resume.pdf" download="Pisupati-Raghavendra-Sree-Suhaas-Resume.pdf" class="liquid-glass px-6 py-3 rounded-full text-sm font-medium hover:scale-105 active:scale-95 transition flex items-center gap-2">
+<i class="fa-solid fa-arrow-down-to-bracket"></i>
+<span class="">Download Resume</span>
+</a>
+</div>
+<!-- Photo Space & Snapshot Card -->
+<div class="pt-6">
+<div class="liquid-glass max-w-4xl mx-auto rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center gap-8 text-left">
+<!-- Photo Slot: Suhaas Photo — auto-loads suhaas-photo.jpg OR uploaded photo -->
+<div class="relative w-64 h-64 sm:w-72 sm:h-72 rounded-3xl overflow-hidden flex-shrink-0 border-2 border-white/40 dark:border-white/30 shadow-2xl group mx-auto sm:mx-0 bg-neutral-900"><img id="heroPhoto" src="suhaas-photo.jpg" alt="Pisupati Raghavendra Sree Suhaas — portrait in black suit" class="w-full h-full object-cover object-top" style="display:block" onerror="this.style.display='none'; document.getElementById('heroPhotoFallback').style.display='flex';"><div id="heroPhotoFallback" class="absolute inset-0 text-center p-4 hidden flex-col items-center justify-center" style="background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.45));"><div class="w-24 h-24 rounded-full bg-black/20 dark:bg-white/10 flex items-center justify-center mb-3 border border-white/20 shadow-inner"><i class="fa-solid fa-user-tie text-5xl text-neutral-800 dark:text-neutral-100"></i></div><span class="font-pixel text-xs tracking-wider text-neutral-900 dark:text-neutral-100 uppercase font-bold transition-colors">ADD YOUR PHOTO</span><span class="block text-[10px] font-mono tracking-widest text-neutral-500 dark:text-neutral-300 mt-1 uppercase">Tap upload below</span><label class="mt-3 px-4 py-2 rounded-full bg-black text-white dark:bg-white dark:text-black text-[11px] font-mono font-semibold cursor-pointer hover:opacity-90">Upload photo<input type="file" accept="image/*" class="hidden photoUpload" data-target="heroPhoto"></label></div><div class="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/70 dark:bg-white/20 border border-white/30 flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-green-500 animate-ping"></div><span class="text-[9px] font-mono text-white tracking-widest uppercase">SUHAAS</span></div><label class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/70 border border-white/30 text-[9px] font-mono text-white tracking-widest uppercase cursor-pointer hover:bg-black/90">Change<input type="file" accept="image/*" class="hidden photoUpload" data-target="heroPhoto"></label></div>
+<div class="space-y-2 text-center sm:text-left flex-1">
+<div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+<span class="font-pixel text-sm sm:text-base font-bold tracking-wider text-neutral-900 dark:text-neutral-100 uppercase transition-colors">PISUPATI RAGHAVENDRA SREE SUHAAS</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 border border-neutral-300 dark:border-neutral-700">MVGR CSE '28</span>
+<span class="text-[10px] font-mono text-neutral-500 dark:text-neutral-400">Vizianagaram</span>
+</div>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              ML Engineering Intern at ScholarX and former Data Science Intern at Thiranex. Experienced in predictive modeling, exploratory analysis, and real-time inference endpoints.
+            </p>
+<div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-1 text-[11px] font-mono text-neutral-500 dark:text-neutral-400">
+<span class=""><i class="fa-solid fa-check text-xs mr-1 text-neutral-800 dark:text-neutral-200"></i>15 Shipped Projects</span>
+<span class=""><i class="fa-solid fa-check text-xs mr-1 text-neutral-800 dark:text-neutral-200"></i>9 Certifications</span>
+<span class=""><i class="fa-solid fa-check text-xs mr-1 text-neutral-800 dark:text-neutral-200"></i>MVGR CSE 3rd Year</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SUNNY AI ASSISTANT WIDGET -->
+<section class="max-w-3xl mx-auto">
+<div class="liquid-glass rounded-3xl p-6 sm:p-7 space-y-4 border border-neutral-300/40 dark:border-neutral-700/50">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-black text-white dark:bg-white dark:text-black flex items-center justify-center text-xs">
+<i class="fa-solid fa-sparkles"></i>
+</div>
+<div>
+<h3 class="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+<span class="">✦ SUNNY AI</span>
+<span class="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10">Ask About My Work</span>
+</h3>
+<p class="text-[11px] text-neutral-500 dark:text-neutral-400">Monochrome intelligent assistant indexing Suhaas's projects and skills.</p>
+</div>
+</div>
+<span class="text-[10px] font-mono px-2 py-1 rounded-md bg-black/5 dark:bg-white/10 text-neutral-600 dark:text-neutral-300">Live Agent v1.0</span>
+</div>
+<div class="rounded-2xl p-4 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 text-xs space-y-2.5 font-mono max-h-44 overflow-y-auto" id="aiChatOutput">
+<div class="text-neutral-500 dark:text-neutral-400">
+            [System] Index initialized with Suhaas's academic records, 15 project repos, and technical internships.
+          </div>
+<div class="p-2.5 rounded-xl bg-black/5 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 leading-relaxed">
+            ✦ Hello! Ask me anything about Suhaas's machine learning pipelines, experience at ScholarX, or his flagship projects like SunnyClass AI.
+          </div>
+</div>
+<div class="flex flex-wrap gap-2 pt-1">
+<button class="ai-prompt-btn text-[11px] font-mono px-3 py-1 rounded-full liquid-glass hover:bg-black/10 dark:hover:bg-white/10 transition text-neutral-700 dark:text-neutral-300" data-query="Tell me about SunnyClass AI">
+            ✦ Tell me about SunnyClass AI
+          </button>
+<button class="ai-prompt-btn text-[11px] font-mono px-3 py-1 rounded-full liquid-glass hover:bg-black/10 dark:hover:bg-white/10 transition text-neutral-700 dark:text-neutral-300" data-query="View certifications">
+            ✦ View certifications (9)
+          </button>
+<button class="ai-prompt-btn text-[11px] font-mono px-3 py-1 rounded-full liquid-glass hover:bg-black/10 dark:hover:bg-white/10 transition text-neutral-700 dark:text-neutral-300" data-query="What is ScholarX role?">
+            ✦ ScholarX ML internship
+          </button>
+</div>
+<form class="flex gap-2 pt-1" id="aiForm">
+<input class="flex-1 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/15 rounded-full px-4 py-2.5 text-xs focus:outline-none focus:border-neutral-900 dark:focus:border-white text-neutral-900 dark:text-white" id="aiInput" placeholder="Ask Sunny AI anything about Suhaas's portfolio..." type="text">
+<button class="px-5 py-2.5 rounded-full bg-black text-white dark:bg-white dark:text-black text-xs font-semibold hover:opacity-90 transition" type="submit">
+            Ask
+          </button>
+</form>
+</div>
+</section>
+<!-- 01 EXPERIENCE SECTION -->
+<section class="space-y-8 reveal-on-scroll" id="experience">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-black/10 dark:border-white/10 pb-4">
+<div>
+<span class="text-xs font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">01 — EXPERIENCE</span>
+<h2 class="font-wasted-vindey text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white mt-1">Building in production, not just in notebooks</h2>
+</div>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">HANDS-ON ENGINEERING WORK</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Experience 1: ScholarX -->
+<div class="liquid-glass rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-mono px-2.5 py-1 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold">
+                CURRENT ROLE
+              </span>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">1 Month · Current</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-neutral-900 dark:text-white">ScholarX</h3>
+<p class="text-xs font-mono text-neutral-500 dark:text-neutral-400">ML Engineering Intern</p>
+</div>
+<ul class="text-xs text-neutral-600 dark:text-neutral-300 space-y-2 list-disc list-inside leading-relaxed">
+<li class="">Built a FastAPI-based model inference service using scikit-learn and joblib for real-time predictions.</li>
+<li class="">Developed an automated feature validation pipeline to catch schema mismatches and outliers.</li>
+<li class="">Shipped a monitored ML endpoint with Prometheus-style metrics, structured logging, and health checks.</li>
+</ul>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex flex-wrap gap-1.5 text-[10px] font-mono text-neutral-600 dark:text-neutral-300">
+<span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10">FastAPI</span>
+<span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10">Scikit-learn</span>
+<span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10">Joblib</span>
+</div>
+</div>
+<!-- Experience 2: Thiranex -->
+<div class="liquid-glass rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-mono px-2.5 py-1 rounded-full bg-black/10 dark:bg-white/10 text-neutral-700 dark:text-neutral-300">
+                COMPLETED
+              </span>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">06 May 2026 — 05 Jun 2026</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-neutral-900 dark:text-white">Thiranex</h3>
+<p class="text-xs font-mono text-neutral-500 dark:text-neutral-400">Data Science Intern</p>
+</div>
+<ul class="text-xs text-neutral-600 dark:text-neutral-300 space-y-2 list-disc list-inside leading-relaxed">
+<li class="">Completed hands-on Data Science internship covering data preprocessing, EDA, and model building on real datasets.</li>
+<li class="">Verified and certified by Thiranex's Skill Development &amp; Future Tech program under MSME.</li>
+<li class="">Performed exploratory statistical analytics with Pandas, NumPy, and visualization suites.</li>
+</ul>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex flex-wrap gap-1.5 text-[10px] font-mono text-neutral-600 dark:text-neutral-300">
+<span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10">Pandas</span>
+<span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10">EDA</span>
+<span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10">MSME Certified</span>
+</div>
+</div>
+<!-- Experience 3: InternLink -->
+<div class="liquid-glass rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-mono px-2.5 py-1 rounded-full bg-black/10 dark:bg-white/10 text-neutral-700 dark:text-neutral-300">
+                COMPLETED
+              </span>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">Issued 30 Dec 2025</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-neutral-900 dark:text-white">InternLink</h3>
+<p class="text-xs font-mono text-neutral-500 dark:text-neutral-400">Web Development Intern</p>
+</div>
+<ul class="text-xs text-neutral-600 dark:text-neutral-300 space-y-2 list-disc list-inside leading-relaxed">
+<li class="">Completed Web Development Internship Program, delivering skill-based tasks with verified knowledge checks.</li>
+<li class="">Demonstrated discipline and consistent task completion across the internship track.</li>
+<li class="">Engineered interactive UI components and REST endpoint bindings.</li>
+</ul>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex flex-wrap gap-1.5 text-[10px] font-mono text-neutral-600 dark:text-neutral-300">
+<span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10">JavaScript</span>
+<span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10">Tailwind</span>
+<span class="px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10">REST</span>
+</div>
+</div>
+</div>
+<!-- Experience Highlights Row -->
+<div class="liquid-glass rounded-3xl p-6 sm:p-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center tilt-card">
+<div class="p-3">
+<div class="font-wasted-vindey text-xl font-bold text-neutral-900 dark:text-white">Applied Depth</div>
+<div class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Executed multiple industry-aligned projects across Data Analytics and AI.</div>
+</div>
+<div class="p-3">
+<div class="font-wasted-vindey text-xl font-bold text-neutral-900 dark:text-white">Problem-Solving</div>
+<div class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Progressively sharpened through rigorous experimentation beyond coursework.</div>
+</div>
+<div class="p-3">
+<div class="font-wasted-vindey text-xl font-bold text-neutral-900 dark:text-white">Ownership</div>
+<div class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Initiative in cross-functional projects fostering timely delivery.</div>
+</div>
+<div class="p-3">
+<div class="font-wasted-vindey text-xl font-bold text-neutral-900 dark:text-white">Continuous Growth</div>
+<div class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Exploring emerging tech domains and evolving professional standards.</div>
+</div>
+</div>
+</section>
+<!-- 02 PROJECTS SECTION (ALL 15 + FLAGSHIPS) -->
+<section class="space-y-8 reveal-on-scroll" id="projects">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-black/10 dark:border-white/10 pb-4">
+<div>
+<span class="text-xs font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">02 — PROJECTS</span>
+<h2 class="font-wasted-vindey text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white mt-1">Fifteen builds, one thread: data into decisions</h2>
+</div>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">FILTER BY DOMAIN</span>
+</div>
+<!-- Domain Filters -->
+<div class="flex flex-wrap items-center gap-2" id="projectFilterBar">
+<button class="filter-btn active px-4 py-1.5 rounded-full text-xs font-mono font-medium bg-black text-white dark:bg-white dark:text-black transition" data-filter="all">
+          All (15)
+        </button>
+<button class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-medium liquid-glass text-neutral-700 dark:text-neutral-300 hover:bg-black/10 dark:hover:bg-white/10 transition" data-filter="ml">
+          Machine Learning
+        </button>
+<button class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-medium liquid-glass text-neutral-700 dark:text-neutral-300 hover:bg-black/10 dark:hover:bg-white/10 transition" data-filter="data">
+          Data Analytics
+        </button>
+<button class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-medium liquid-glass text-neutral-700 dark:text-neutral-300 hover:bg-black/10 dark:hover:bg-white/10 transition" data-filter="backend">
+          Backend / API
+        </button>
+<button class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-medium liquid-glass text-neutral-700 dark:text-neutral-300 hover:bg-black/10 dark:hover:bg-white/10 transition" data-filter="nlp">
+          NLP
+        </button>
+<button class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-medium liquid-glass text-neutral-700 dark:text-neutral-300 hover:bg-black/10 dark:hover:bg-white/10 transition" data-filter="systems">
+          Systems / C
+        </button>
+</div>
+<!-- Flagship Dual Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="liquid-glass rounded-3xl p-7 flex flex-col justify-between space-y-4 border-2 border-black/10 dark:border-white/15">
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="px-2.5 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black text-[10px]">FLAGSHIP SYSTEM</span>
+<span class="text-neutral-500 dark:text-neutral-400">Python · CV · GenAI</span>
+</div>
+<h3 class="font-wasted-vindey text-xl font-bold text-neutral-900 dark:text-white">SunnyClass AI</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Developed an AI-powered online classroom monitoring system that uses real-time analytics to track student attendance, engagement, and participation, providing intelligent insights to improve virtual learning outcomes.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono">
+<span class="text-neutral-500">Computer Vision · Streamlit</span>
+<a class="hover:underline flex items-center gap-1 text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/SunnyClass" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<div class="liquid-glass rounded-3xl p-7 flex flex-col justify-between space-y-4 border-2 border-black/10 dark:border-white/15">
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs font-mono">
+<span class="px-2.5 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black text-[10px]">MULTI-AGENT AI</span>
+<span class="text-neutral-500 dark:text-neutral-400">Autonomous Agents</span>
+</div>
+<h3 class="font-wasted-vindey text-xl font-bold text-neutral-900 dark:text-white">Multi-Agent Commerce OS</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Built an operating layer for an online business where eight specialised AI agents observe events, investigate with typed tools, collaborate on findings, and execute actions under a governance pipeline that decides deterministically what they may do alone.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono">
+<span class="text-neutral-500">Agentic Orchestration</span>
+<a class="hover:underline flex items-center gap-1 text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/commerce-os" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+</div>
+<!-- Grid of 11 Project Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projectsGrid">
+<!-- #01 AI Crop Recommendation -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="ml">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">🌾 #01</span>
+<span class="">Machine Learning</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">AI Crop Recommendation System</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              ML application recommending optimal crops from soil nutrients, temperature, humidity, rainfall, and pH — with a full preprocessing and prediction pipeline.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">Python · Pandas · Scikit-learn</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/AI-Crop-Recommendation-System-" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<!-- #02 Customer Churn -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="ml">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">📉 #02</span>
+<span class="">Machine Learning</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Customer Churn Prediction</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Classification model identifying customers likely to churn, with feature engineering, model evaluation, and actionable business insights.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">Python · Scikit-learn · Seaborn</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/Customer-Churn-Prediction" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<!-- #03 Retail Sales Analysis -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="data">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">📊 #03</span>
+<span class="">Data Analytics</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Retail Sales Analysis Dashboard</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Interactive BI dashboard analyzing sales performance, customer behavior, regional trends, and product profitability.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">Power BI · SQL · DAX · Excel</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/Retail-Sales-Analysis-Dashboard" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<!-- #04 Finance Data Analysis -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="data">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">💰 #04</span>
+<span class="">Data Analytics</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Finance Data Analysis</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Exploratory data analysis on financial datasets to surface revenue trends, spending patterns, and key performance indicators.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">Python · Pandas · NumPy · SQL</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/Finance-Data-Analysis" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<!-- #05 Medical Billing System in C -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="systems">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">🏥 #05</span>
+<span class="">Systems / C</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Medical Billing System</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Console-based billing system in C using core data structures for patient registration, invoicing, and record management.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">C · Data Structures · File I/O</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/Medical-Billing-System" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<!-- #06 Weather Prediction -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="ml">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">🌦️ #06</span>
+<span class="">Machine Learning</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Weather Prediction</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              ML model predicting weather conditions from historical meteorological data, including feature selection and evaluation.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">Python · Scikit-learn · Matplotlib</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/Weather-Prediction" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<!-- #07 Sentiment Analysis -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="nlp">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">💬 #07</span>
+<span class="">NLP</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Sentiment Analysis</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              NLP model classifying reviews and social posts into positive, negative, or neutral sentiment using text preprocessing and ML.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">Python · NLTK · Scikit-learn</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/Sentiment-Analysis" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<!-- #08 FastAPI ML Inference Service -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="backend">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">⚙️ #08</span>
+<span class="">Backend / API</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">FastAPI ML Inference Service</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Production-ready REST API serving ML predictions, with request validation, structured responses, and interactive docs.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">FastAPI · Pydantic · Uvicorn</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/FastAPI-ML-Inference-Service" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<!-- #09 Feature Validation Pipeline -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="backend">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">✅ #09</span>
+<span class="">Data Pipeline</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Feature Validation Pipeline</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Automated data validation pipeline detecting missing values, schema mismatches, outliers, and invalid types before inference.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">Python · Pandas · FastAPI</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/Feature-Validation-Pipeline" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<!-- #10 Monitored ML Prediction API -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="backend">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">📡 #10</span>
+<span class="">Backend / API</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Monitored ML Prediction API</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              ML endpoint with logging, request monitoring, prediction tracking, and health checks simulating production deployment.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">FastAPI · Docker · Logging</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/Monitored-ML-Prediction-API" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<!-- #11 YouTube Shorts Analytics Pipeline -->
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="data">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">🎬 #11</span>
+<span class="">Data &amp; Content</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">YouTube Shorts Analytics Pipeline</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Pipeline collecting and analyzing YouTube Shorts performance metrics to surface engagement, reach, and trend insights.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">YouTube API · Pandas · Power BI</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/YouTube-Shorts-Analytics-Pipeline1" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+</div>
+<!-- Additional Special Systems (Face ID + Voice RAG) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+<div class="liquid-glass rounded-3xl p-6 space-y-2 flex flex-col justify-between">
+<div class="space-y-2">
+<div class="text-[10px] font-mono text-neutral-500 uppercase">Computer Vision + Ledger</div>
+<h4 class="text-base font-bold text-neutral-900 dark:text-white">Face ID + Blockchain Verification</h4>
+<p class="text-xs text-neutral-600 dark:text-neutral-300">
+            Identity verification pipeline that detects and encodes faces from images, performs reverse-image verification against authentic social sources, and records verified matches on blockchain.
+          </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">Python · Face Recognition · Blockchain</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev?tab=repositories" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<div class="liquid-glass rounded-3xl p-6 space-y-2 flex flex-col justify-between">
+<div class="space-y-2">
+<div class="text-[10px] font-mono text-neutral-500 uppercase">Generative AI + Audio</div>
+<h4 class="text-base font-bold text-neutral-900 dark:text-white">Voice-Enabled RAG Model</h4>
+<p class="text-xs text-neutral-600 dark:text-neutral-300">
+            End-to-end voice-enabled Retrieval-Augmented Generation system integrating speech-to-text, document chunking, vector retrieval, and grounded response generation with real-time safety guardrails.
+          </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">Whisper · LangChain · FAISS</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev?tab=repositories" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+</div>
+<!-- NEW: 4 Requested Projects — tinyml-gestures / deepfake-cvit / rag-agent / ml-demos -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-2" id="newProjectsGrid">
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="ml">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">⚡ #12</span>
+<span class="">Edge ML · TinyML</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">tinyml-gestures</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              On-device gesture recognition with TinyML — IMU data capture, TensorFlow training, TFLite quantization and real-time microcontroller inference.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">TensorFlow · TFLite · Arduino</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/tinyml-gestures" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="ml">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">🕵️ #13</span>
+<span class="">Computer Vision</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">deepfake-cvit</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Deepfake detection with computer vision transformers — face preprocessing, artifact learning, and verified evaluation pipeline.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">PyTorch · OpenCV · ViT</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/deepfake-cvit" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="nlp">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">🤖 #14</span>
+<span class="">GenAI · RAG</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">rag-agent</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Retrieval-augmented agent with optimized chunking, vector semantic search, grounded generation and safety guardrails.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">LangChain · FAISS · LLM</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/rag-agent" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+<div class="project-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:-translate-y-1 transition tilt-card" data-category="ml">
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-400">
+<span class="">🧪 #15</span>
+<span class="">ML Collection</span>
+</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">ml-demos</h3>
+<p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Public collection of hands-on ML demos — preprocessing, EDA, modelling and visualization notebooks in one place.
+            </p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] font-mono">
+<span class="text-neutral-500 dark:text-neutral-400">Python · Notebooks · Sklearn</span>
+<a class="hover:underline text-neutral-900 dark:text-white" href="https://github.com/suhaasdev/ml-demos" target="_blank" rel="noopener">View on GitHub →</a>
+</div>
+</div>
+</div>
+</section>
+<!-- 03 ABOUT & PROFILE -->
+<section class="space-y-8 reveal-on-scroll" id="about">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-black/10 dark:border-white/10 pb-4">
+<div>
+<span class="text-xs font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">03 — ABOUT</span>
+<h2 class="font-wasted-vindey text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white mt-1">Background &amp; Technical Focus</h2>
+</div>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">ENGINEERING PROFILE</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<div class="lg:col-span-5 space-y-6">
+<div class="liquid-glass rounded-3xl p-6 text-center space-y-4">
+<!-- Photo Frame: Suhaas Portrait — syncs with hero photo -->
+<div class="w-72 h-72 sm:w-80 sm:h-80 mx-auto rounded-3xl relative overflow-hidden border-2 border-white/30 dark:border-white/30 shadow-2xl bg-neutral-900"><img id="aboutPhoto" src="suhaas-photo.jpg" alt="Pisupati Raghavendra Sree Suhaas — portrait" class="w-full h-full object-cover object-top" style="display:block" onerror="this.style.display='none'; document.getElementById('aboutPhotoFallback').style.display='flex';"><div id="aboutPhotoFallback" class="absolute inset-0 text-center p-6 hidden flex-col items-center justify-center" style="background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.5));"><div class="w-28 h-28 rounded-full bg-black/20 dark:bg-white/10 flex items-center justify-center mb-4 border border-white/20 shadow-inner"><i class="fa-solid fa-user-astronaut text-6xl text-neutral-800 dark:text-neutral-100"></i></div><div class="font-pixel text-xs sm:text-sm font-bold tracking-widest text-neutral-900 dark:text-neutral-100 uppercase transition-colors">ADD YOUR PHOTO</div><div class="mt-1 text-[10px] font-mono tracking-widest text-neutral-500 dark:text-neutral-300 uppercase font-semibold">Tap upload below</div><label class="mt-3 px-4 py-2 rounded-full bg-black text-white dark:bg-white dark:text-black text-[11px] font-mono font-semibold cursor-pointer hover:opacity-90">Upload photo<input type="file" accept="image/*" class="hidden photoUpload" data-target="aboutPhoto"></label></div><div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/70 dark:bg-white/20 border border-white/25 text-[10px] font-mono text-white flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-400"></span>SUHAAS</div><label class="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-black/70 border border-white/30 text-[9px] font-mono text-white tracking-widest uppercase cursor-pointer hover:bg-black/90">Change<input type="file" accept="image/*" class="hidden photoUpload" data-target="aboutPhoto"></label></div>
+<div>
+<h3 class="font-pixel text-base sm:text-lg font-bold tracking-wider text-neutral-900 dark:text-neutral-100 uppercase transition-colors">PISUPATI RAGHAVENDRA SREE SUHAAS</h3>
+<p class="text-xs font-mono text-neutral-500 dark:text-neutral-400">Computer Science &amp; Engineering Undergrad</p>
+</div>
+<div class="grid grid-cols-3 gap-2 pt-2 text-center">
+<div class="p-3 rounded-2xl bg-black/5 dark:bg-white/5">
+<span class="font-wasted-vindey text-xl font-bold text-neutral-900 dark:text-white block">15+</span>
+<span class="text-[10px] text-neutral-500 dark:text-neutral-400 font-mono">Projects</span>
+</div>
+<div class="p-3 rounded-2xl bg-black/5 dark:bg-white/5">
+<span class="font-wasted-vindey text-xl font-bold text-neutral-900 dark:text-white block">9</span>
+<span class="text-[10px] text-neutral-500 dark:text-neutral-400 font-mono">Certs</span>
+</div>
+<div class="p-3 rounded-2xl bg-black/5 dark:bg-white/5">
+<span class="font-wasted-vindey text-xl font-bold text-neutral-900 dark:text-white block">5</span>
+<span class="text-[10px] text-neutral-500 dark:text-neutral-400 font-mono">Domains</span>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-7 space-y-6">
+<div class="liquid-glass rounded-3xl p-7 sm:p-8 space-y-5">
+<h3 class="text-xl font-bold text-neutral-900 dark:text-white">
+              Hi, I'm Suhaas.
+            </h3>
+<p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              I'm a Computer Science student focused on Machine Learning, Data Analytics, and Artificial Intelligence. I enjoy turning data into meaningful insights and developing intelligent applications using Python, SQL, and modern ML frameworks.
+            </p>
+<p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              My goal is to build scalable AI solutions that solve real-world challenges — while continuously learning and growing as an engineer, one production system at a time.
+            </p>
+<div class="space-y-3 pt-2">
+<h4 class="text-xs font-mono uppercase tracking-widest text-neutral-500 dark:text-neutral-400">Soft Skills &amp; Principles</h4>
+<div class="flex flex-wrap gap-2 text-xs font-mono">
+<span class="px-3 py-1 rounded-full bg-black/5 dark:bg-white/10">Critical Thinking</span>
+<span class="px-3 py-1 rounded-full bg-black/5 dark:bg-white/10">Effective Communication</span>
+<span class="px-3 py-1 rounded-full bg-black/5 dark:bg-white/10">Problem Solving</span>
+<span class="px-3 py-1 rounded-full bg-black/5 dark:bg-white/10">Teamwork &amp; Collaboration</span>
+<span class="px-3 py-1 rounded-full bg-black/5 dark:bg-white/10">Time Management</span>
+<span class="px-3 py-1 rounded-full bg-black/5 dark:bg-white/10">Leadership</span>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3 pt-4 border-t border-black/10 dark:border-white/10 text-xs font-mono">
+<a class="hover:underline flex items-center gap-1.5 text-neutral-800 dark:text-neutral-200" href="mailto:sreesuhaas04@gmail.com">
+<i class="fa-regular fa-envelope"></i> sreesuhaas04@gmail.com
+              </a>
+<span class="text-neutral-400">•</span>
+<a class="hover:underline flex items-center gap-1.5 text-neutral-800 dark:text-neutral-200" href="tel:+917569317089">
+<i class="fa-solid fa-phone"></i> +91 75693 17089
+              </a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 04 SKILLS SECTION -->
+<section class="space-y-8 reveal-on-scroll" id="skills">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-black/10 dark:border-white/10 pb-4">
+<div>
+<span class="text-xs font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">04 — SKILLS</span>
+<h2 class="font-wasted-vindey text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white mt-1">Toolkit, at a glance</h2>
+</div>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">CORE COMPETENCIES</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Languages & Benchmarks -->
+<div class="liquid-glass rounded-3xl p-6 sm:p-7 space-y-5">
+<h3 class="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+<i class="fa-solid fa-code text-xs"></i> LANGUAGES
+          </h3>
+<div class="space-y-4 text-xs font-mono">
+<div class="space-y-1.5">
+<div class="flex justify-between">
+<span class="">Python</span>
+<span class="">92%</span>
+</div>
+<div class="w-full bg-black/10 dark:bg-white/10 h-2 rounded-full overflow-hidden">
+<div class="bg-black dark:bg-white h-full rounded-full" style="width: 92%"></div>
+</div>
+</div>
+<div class="space-y-1.5">
+<div class="flex justify-between">
+<span class="">C</span>
+<span class="">75%</span>
+</div>
+<div class="w-full bg-black/10 dark:bg-white/10 h-2 rounded-full overflow-hidden">
+<div class="bg-black dark:bg-white h-full rounded-full" style="width: 75%"></div>
+</div>
+</div>
+<div class="space-y-1.5">
+<div class="flex justify-between">
+<span class="">C++</span>
+<span class="">72%</span>
+</div>
+<div class="w-full bg-black/10 dark:bg-white/10 h-2 rounded-full overflow-hidden">
+<div class="bg-black dark:bg-white h-full rounded-full" style="width: 72%"></div>
+</div>
+</div>
+<div class="space-y-1.5">
+<div class="flex justify-between">
+<span class="">TypeScript / JavaScript</span>
+<span class="">45%</span>
+</div>
+<div class="w-full bg-black/10 dark:bg-white/10 h-2 rounded-full overflow-hidden">
+<div class="bg-black dark:bg-white h-full rounded-full" style="width: 45%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Frameworks & Ecosystem -->
+<div class="liquid-glass rounded-3xl p-6 sm:p-7 space-y-5">
+<h3 class="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+<i class="fa-solid fa-layer-group text-xs"></i> FRAMEWORKS &amp; LIBRARIES
+          </h3>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-mono">
+<div class="p-2.5 rounded-xl bg-black/5 dark:bg-white/5">
+<span class="font-bold block">Scikit-learn</span>
+<span class="text-[10px] text-neutral-500">85%</span>
+</div>
+<div class="p-2.5 rounded-xl bg-black/5 dark:bg-white/5">
+<span class="font-bold block">Pandas</span>
+<span class="text-[10px] text-neutral-500">90%</span>
+</div>
+<div class="p-2.5 rounded-xl bg-black/5 dark:bg-white/5">
+<span class="font-bold block">NumPy</span>
+<span class="text-[10px] text-neutral-500">88%</span>
+</div>
+<div class="p-2.5 rounded-xl bg-black/5 dark:bg-white/5">
+<span class="font-bold block">TensorFlow</span>
+<span class="text-[10px] text-neutral-500">72%</span>
+</div>
+<div class="p-2.5 rounded-xl bg-black/5 dark:bg-white/5">
+<span class="font-bold block">Keras</span>
+<span class="text-[10px] text-neutral-500">68%</span>
+</div>
+<div class="p-2.5 rounded-xl bg-black/5 dark:bg-white/5">
+<span class="font-bold block">OpenCV</span>
+<span class="text-[10px] text-neutral-500">65%</span>
+</div>
+<div class="p-2.5 rounded-xl bg-black/5 dark:bg-white/5">
+<span class="font-bold block">React</span>
+<span class="text-[10px] text-neutral-500">58%</span>
+</div>
+<div class="p-2.5 rounded-xl bg-black/5 dark:bg-white/5">
+<span class="font-bold block">Node.js</span>
+<span class="text-[10px] text-neutral-500">55%</span>
+</div>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10">
+<span class="text-[11px] font-mono text-neutral-500 block mb-2">DOMAINS</span>
+<div class="flex flex-wrap gap-1.5 text-xs font-mono">
+<span class="px-2.5 py-1 rounded-md bg-black/5 dark:bg-white/10">Machine Learning</span>
+<span class="px-2.5 py-1 rounded-md bg-black/5 dark:bg-white/10">Computer Vision</span>
+<span class="px-2.5 py-1 rounded-md bg-black/5 dark:bg-white/10">Agentic AI</span>
+<span class="px-2.5 py-1 rounded-md bg-black/5 dark:bg-white/10">Robotics</span>
+<span class="px-2.5 py-1 rounded-md bg-black/5 dark:bg-white/10">DSA</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 05 EDUCATION SECTION -->
+<section class="space-y-8 reveal-on-scroll" id="education">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-black/10 dark:border-white/10 pb-4">
+<div>
+<span class="text-xs font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">05 — EDUCATION</span>
+<h2 class="font-wasted-vindey text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white mt-1">Academic Foundation</h2>
+</div>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">MVGR COLLEGE OF ENGINEERING</span>
+</div>
+<div class="liquid-glass rounded-3xl p-6 sm:p-8 space-y-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="space-y-1">
+<span class="text-xs font-mono text-neutral-500 uppercase">B.Tech — Computer Science &amp; Engineering</span>
+<h3 class="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white">
+              MVGR College of Engineering (Autonomous)
+            </h3>
+<p class="text-sm text-neutral-600 dark:text-neutral-300">
+              3rd Year (Currently Pursuing) · Vizianagaram, India
+            </p>
+</div>
+<div class="text-left md:text-right">
+<span class="px-3 py-1 rounded-full bg-black text-white dark:bg-white dark:text-black text-xs font-mono font-semibold inline-block">
+              2024 — 2028 (Expected)
+            </span>
+</div>
+</div>
+<div class="pt-4 border-t border-black/10 dark:border-white/10 space-y-2">
+<h4 class="text-xs font-mono text-neutral-500 uppercase">Key Coursework</h4>
+<div class="flex flex-wrap gap-2 text-xs font-mono">
+<span class="px-3 py-1 rounded-xl bg-black/5 dark:bg-white/5">Data Structures</span>
+<span class="px-3 py-1 rounded-xl bg-black/5 dark:bg-white/5">Object-Oriented Programming (OOP)</span>
+<span class="px-3 py-1 rounded-xl bg-black/5 dark:bg-white/5">Computer Networks</span>
+<span class="px-3 py-1 rounded-xl bg-black/5 dark:bg-white/5">Operating Systems</span>
+<span class="px-3 py-1 rounded-xl bg-black/5 dark:bg-white/5">Machine Learning</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 06 CERTIFICATES GALLERY (ALL 9 ITEMS) -->
+<section class="space-y-8 reveal-on-scroll" id="certificates">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-black/10 dark:border-white/10 pb-4">
+<div>
+<span class="text-xs font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">06 — CERTIFICATES</span>
+<h2 class="font-wasted-vindey text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white mt-1">Certificate Gallery</h2>
+</div>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">CLICK ANY CARD TO PREVIEW</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="certGrid">
+<!-- 1 -->
+<div class="cert-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer tilt-card" data-issuer="Thiranex" data-title="Data Science Internship Certificate">
+<div class="space-y-1.5">
+<div class="text-[11px] font-mono text-neutral-500">#01</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Data Science Internship</h3>
+<p class="text-xs text-neutral-500">Thiranex</p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 text-xs font-mono flex justify-between">
+<span class="text-neutral-500">MSME Verified</span>
+<span class="text-neutral-900 dark:text-white font-semibold">Preview ↗</span>
+</div>
+</div>
+<!-- 2 -->
+<div class="cert-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer tilt-card" data-issuer="ScholarX" data-title="ML Engineering Certificate">
+<div class="space-y-1.5">
+<div class="text-[11px] font-mono text-neutral-500">#02</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">ML Engineering Certificate</h3>
+<p class="text-xs text-neutral-500">ScholarX</p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 text-xs font-mono flex justify-between">
+<span class="text-neutral-500">Production ML</span>
+<span class="text-neutral-900 dark:text-white font-semibold">Preview ↗</span>
+</div>
+</div>
+<!-- 3 -->
+<div class="cert-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer tilt-card" data-issuer="InternLink" data-title="Web Development Internship">
+<div class="space-y-1.5">
+<div class="text-[11px] font-mono text-neutral-500">#03</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Web Development Internship</h3>
+<p class="text-xs text-neutral-500">InternLink</p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 text-xs font-mono flex justify-between">
+<span class="text-neutral-500">Issued 30 Dec 2025</span>
+<span class="text-neutral-900 dark:text-white font-semibold">Preview ↗</span>
+</div>
+</div>
+<!-- 4 -->
+<div class="cert-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer tilt-card" data-issuer="Microsoft / Simplilearn SkillUP" data-title="Data Analyst 101">
+<div class="space-y-1.5">
+<div class="text-[11px] font-mono text-neutral-500">#04</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Data Analyst 101</h3>
+<p class="text-xs text-neutral-500">Microsoft / Simplilearn SkillUP</p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 text-xs font-mono flex justify-between">
+<span class="text-neutral-500">Analytics</span>
+<span class="text-neutral-900 dark:text-white font-semibold">Preview ↗</span>
+</div>
+</div>
+<!-- 5 -->
+<div class="cert-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer tilt-card" data-issuer="Cisco Networking Academy" data-title="Python Essentials 1">
+<div class="space-y-1.5">
+<div class="text-[11px] font-mono text-neutral-500">#05</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Python Essentials 1</h3>
+<p class="text-xs text-neutral-500">Cisco Networking Academy</p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 text-xs font-mono flex justify-between">
+<span class="text-neutral-500">Python Core</span>
+<span class="text-neutral-900 dark:text-white font-semibold">Preview ↗</span>
+</div>
+</div>
+<!-- 6 -->
+<div class="cert-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer tilt-card" data-issuer="Simplilearn SkillUP" data-title="Machine Learning Using Python">
+<div class="space-y-1.5">
+<div class="text-[11px] font-mono text-neutral-500">#06</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Machine Learning Using Python</h3>
+<p class="text-xs text-neutral-500">Simplilearn SkillUP</p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 text-xs font-mono flex justify-between">
+<span class="text-neutral-500">ML Algorithms</span>
+<span class="text-neutral-900 dark:text-white font-semibold">Preview ↗</span>
+</div>
+</div>
+<!-- 7 -->
+<div class="cert-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer tilt-card" data-issuer="Google Cloud / Simplilearn" data-title="Innovating with Google Cloud AI">
+<div class="space-y-1.5">
+<div class="text-[11px] font-mono text-neutral-500">#07</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Innovating with Google Cloud AI</h3>
+<p class="text-xs text-neutral-500">Google Cloud / Simplilearn</p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 text-xs font-mono flex justify-between">
+<span class="text-neutral-500">Cloud AI</span>
+<span class="text-neutral-900 dark:text-white font-semibold">Preview ↗</span>
+</div>
+</div>
+<!-- 8 -->
+<div class="cert-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer tilt-card" data-issuer="Google Developer Group, MVGR" data-title="TechSprint 2026 — Participation">
+<div class="space-y-1.5">
+<div class="text-[11px] font-mono text-neutral-500">#08</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">TechSprint 2026 — Participation</h3>
+<p class="text-xs text-neutral-500">Google Developer Group, MVGR</p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 text-xs font-mono flex justify-between">
+<span class="text-neutral-500">Hackathon</span>
+<span class="text-neutral-900 dark:text-white font-semibold">Preview ↗</span>
+</div>
+</div>
+<!-- 9 -->
+<div class="cert-card liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:scale-[1.02] transition cursor-pointer tilt-card" data-issuer="Certification" data-title="C Essentials">
+<div class="space-y-1.5">
+<div class="text-[11px] font-mono text-neutral-500">#09</div>
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">C Essentials</h3>
+<p class="text-xs text-neutral-500">Certification</p>
+</div>
+<div class="pt-3 border-t border-black/10 dark:border-white/10 text-xs font-mono flex justify-between">
+<span class="text-neutral-500">Low-level / Systems</span>
+<span class="text-neutral-900 dark:text-white font-semibold">Preview ↗</span>
+</div>
+</div>
+</div>
+</section>
+<!-- BONUS ARCADE: SNAKE GAME -->
+<section class="space-y-8 reveal-on-scroll" id="game">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-black/10 dark:border-white/10 pb-4">
+<div>
+<span class="text-xs font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">BONUS — ARCADE</span>
+<h2 class="font-wasted-vindey text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white mt-1">Snake, in monochrome</h2>
+</div>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">KEYBOARD · SWIPE · TAP</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+<div class="lg:col-span-7 liquid-glass rounded-3xl p-4 sm:p-6 relative overflow-hidden">
+<canvas id="snake" width="400" height="400" aria-label="Snake game board"></canvas>
+<div id="snakeOverlay" class="absolute inset-4 sm:inset-6 rounded-2xl hidden items-center justify-center text-center bg-black/70 backdrop-blur-sm">
+<div class="space-y-2 p-6">
+<div id="snakeOverlayTitle" class="font-pixel text-white text-lg tracking-widest">GAME OVER</div>
+<div id="snakeOverlayScore" class="text-xs font-mono text-neutral-300">Score 0</div>
+<button id="snakeRestart" class="snake-btn px-5 py-2.5 rounded-full bg-white text-black text-xs font-semibold">Play again</button>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 liquid-glass rounded-3xl p-6 sm:p-7 space-y-4 text-xs font-mono">
+<div class="flex items-center justify-between">
+<div>
+<div class="text-[10px] text-neutral-500 uppercase">Score</div>
+<div id="snakeScore" class="font-wasted-vindey text-3xl font-bold text-neutral-900 dark:text-white">0</div>
+</div>
+<div class="text-right">
+<div class="text-[10px] text-neutral-500 uppercase">Best</div>
+<div id="snakeBest" class="font-wasted-vindey text-3xl font-bold text-neutral-900 dark:text-white">0</div>
+</div>
+<div class="text-right">
+<div class="text-[10px] text-neutral-500 uppercase">Speed</div>
+<div id="snakeSpeed" class="font-wasted-vindey text-3xl font-bold text-neutral-900 dark:text-white">1×</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2">
+<button id="snakeStart" class="snake-btn flex-1 py-2.5 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-semibold">Start</button>
+<button id="snakePause" class="snake-btn flex-1 py-2.5 rounded-xl liquid-glass text-xs font-semibold">Pause</button>
+</div>
+<p class="text-neutral-500 dark:text-neutral-400 leading-relaxed">Arrows / WASD to steer. Swipe on the board on phone &amp; tablet. Eat to speed up — don’t hit the walls or yourself.</p>
+<div class="grid grid-cols-3 gap-2 max-w-[220px] mx-auto select-none">
+<span></span>
+<button class="snake-btn p-3 rounded-xl bg-black/5 dark:bg-white/10 text-sm" data-dir="up">▲</button>
+<span></span>
+<button class="snake-btn p-3 rounded-xl bg-black/5 dark:bg-white/10 text-sm" data-dir="left">◀</button>
+<button class="snake-btn p-3 rounded-xl bg-black/5 dark:bg-white/10 text-sm" data-dir="down">▼</button>
+<button class="snake-btn p-3 rounded-xl bg-black/5 dark:bg-white/10 text-sm" data-dir="right">▶</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 07 RESUME SECTION -->
+<section class="space-y-8 reveal-on-scroll" id="resume">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-black/10 dark:border-white/10 pb-4">
+<div>
+<span class="text-xs font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">07 — RESUME</span>
+<h2 class="font-wasted-vindey text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white mt-1">Curriculum Vitae</h2>
+</div>
+<a href="Suhaas-Resume.pdf" download="Pisupati-Raghavendra-Sree-Suhaas-Resume.pdf" class="px-4 py-2 rounded-full bg-black text-white dark:bg-white dark:text-black text-xs font-semibold hover:opacity-90 transition flex items-center gap-2">
+<i class="fa-solid fa-download"></i>
+<span class="">Download PDF</span>
+</a>
+</div>
+<div class="liquid-glass rounded-3xl p-6 sm:p-10 space-y-6 max-w-4xl mx-auto shadow-2xl border border-black/10 dark:border-white/15">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-black/10 dark:border-white/10 gap-4">
+<div>
+<h3 class="font-wasted-vindey text-2xl font-bold text-neutral-900 dark:text-white tracking-wide">
+              PISUPATI RAGHAVENDRA SREE SUHAAS
+            </h3>
+<p class="text-xs font-mono text-neutral-600 dark:text-neutral-400 mt-1">
+              AI/ML Engineer · Generative AI Systems · Computer Science Undergrad
+            </p>
+</div>
+<div class="text-xs font-mono text-neutral-600 dark:text-neutral-400 space-y-1">
+<div class=""><i class="fa-solid fa-envelope mr-1"></i> sreesuhaas04@gmail.com</div>
+<div class=""><i class="fa-solid fa-phone mr-1"></i> +91 75693 17089</div>
+<div class=""><i class="fa-brands fa-linkedin mr-1"></i> linkedin.com/in/raghavendra-sree-suhaas-pisupati</div>
+<div class=""><i class="fa-brands fa-github mr-1"></i> github.com/suhaasdev</div>
+</div>
+</div>
+<div class="space-y-2 text-xs">
+<h4 class="font-mono uppercase tracking-widest text-neutral-500 border-b border-black/5 dark:border-white/5 pb-1">Profile Overview</h4>
+<p class="text-neutral-600 dark:text-neutral-300 leading-relaxed">
+            Aspiring Machine Learning Engineer and Data Analyst with a strong foundation in Python, SQL, machine learning, and data analytics. Passionate about developing data-driven solutions, building predictive models, and extracting meaningful insights from complex datasets. Experienced in working on real-world projects involving data preprocessing, exploratory data analysis, visualization, and machine learning model development. A quick learner with strong problem-solving abilities, eager to contribute technical skills and continuously grow in a collaborative, innovation-driven environment.
+          </p>
+</div>
+<div class="space-y-2 text-xs">
+<h4 class="font-mono uppercase tracking-widest text-neutral-500 border-b border-black/5 dark:border-white/5 pb-1">Education</h4>
+<div class="flex justify-between font-semibold text-neutral-900 dark:text-white">
+<span class="">MVGR College of Engineering (Autonomous) — B.Tech CSE</span>
+<span class="font-mono font-normal text-neutral-500">2024 – 2028 (Expected)</span>
+</div>
+<p class="text-neutral-500">3rd Year (Currently Pursuing)</p>
+<p class="text-neutral-600 dark:text-neutral-300">Coursework: Data Structures, Object-Oriented Programming (OOP), Computer Networks, Operating Systems, Machine Learning</p>
+</div>
+<div class="space-y-3 text-xs">
+<h4 class="font-mono uppercase tracking-widest text-neutral-500 border-b border-black/5 dark:border-white/5 pb-1">Experience</h4>
+<div>
+<div class="flex justify-between font-semibold text-neutral-900 dark:text-white">
+<span class="">Thiranex — Data Science Internship</span>
+<span class="font-mono font-normal text-neutral-500">Internship</span>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-semibold text-neutral-900 dark:text-white">
+<span class="">ScholarX — Machine Learning Engineering</span>
+<span class="font-mono font-normal text-neutral-500">Current</span>
+</div>
+<p class="text-neutral-600 dark:text-neutral-300">Built FastAPI-based model inference service using scikit-learn and automated validation pipelines.</p>
+</div>
+<div>
+<div class="flex justify-between font-semibold text-neutral-900 dark:text-white">
+<span class="">Internlink — Web Development</span>
+<span class="font-mono font-normal text-neutral-500">Internship</span>
+</div>
+</div>
+</div>
+<div class="space-y-2 text-xs">
+<h4 class="font-mono uppercase tracking-widest text-neutral-500 border-b border-black/5 dark:border-white/5 pb-1">Technical Skills</h4>
+<p class="text-neutral-600 dark:text-neutral-300"><strong class="text-neutral-900 dark:text-white">Languages &amp; Query:</strong> Python, SQL</p>
+<p class="text-neutral-600 dark:text-neutral-300"><strong class="text-neutral-900 dark:text-white">Machine Learning:</strong> Supervised &amp; Unsupervised Learning, NLP, Predictive Modelling</p>
+<p class="text-neutral-600 dark:text-neutral-300"><strong class="text-neutral-900 dark:text-white">Data &amp; Analytics:</strong> Pandas, NumPy, Statistical Analysis, Data Wrangling</p>
+<p class="text-neutral-600 dark:text-neutral-300"><strong class="text-neutral-900 dark:text-white">Visualisation:</strong> Matplotlib, Seaborn, Tableau, Power BI</p>
+<p class="text-neutral-600 dark:text-neutral-300"><strong class="text-neutral-900 dark:text-white">Tools &amp; Platforms:</strong> Git, GitHub, Docker, Jupyter Notebook, Apache Kafka</p>
+</div>
+<div class="space-y-2 text-xs">
+<h4 class="font-mono uppercase tracking-widest text-neutral-500 border-b border-black/5 dark:border-white/5 pb-1">Projects</h4>
+<ul class="list-disc list-inside space-y-1.5 text-neutral-600 dark:text-neutral-300 leading-relaxed">
+<li><strong class="text-neutral-900 dark:text-white">SunnyClass AI —</strong> Developed an AI-powered online classroom monitoring system that uses real-time analytics to track student attendance, engagement, and participation, providing intelligent insights to improve virtual learning outcomes.</li>
+<li><strong class="text-neutral-900 dark:text-white">Multi-Agent Commerce OS —</strong> Built an operating layer for an online business where eight specialised AI agents observe events, investigate with typed tools, collaborate on findings, and execute actions under a governance pipeline that decides — deterministically — what they may do alone and what needs a human.</li>
+<li><strong class="text-neutral-900 dark:text-white">Face ID + Blockchain Verification —</strong> Developed an AI-powered identity verification pipeline that detects and encodes faces from images, performs reverse-image verification against authentic social media sources, and records verified matches on blockchain for tamper-evident and traceable validation.</li>
+<li><strong class="text-neutral-900 dark:text-white">Voice-Enabled RAG Model —</strong> Built an end-to-end voice-enabled Retrieval-Augmented Generation (RAG) system integrating speech-to-text transcription, optimized document chunking, vector-based semantic retrieval, and grounded response generation with real-time performance and safety guardrails.</li>
+<li><strong class="text-neutral-900 dark:text-white">tinyml-gestures —</strong> On-device gesture recognition with TinyML. <span class="font-mono">github.com/suhaasdev/tinyml-gestures</span></li>
+<li><strong class="text-neutral-900 dark:text-white">deepfake-cvit —</strong> Deepfake detection with computer vision transformers. <span class="font-mono">github.com/suhaasdev/deepfake-cvit</span></li>
+<li><strong class="text-neutral-900 dark:text-white">rag-agent —</strong> Retrieval-augmented agent with vector search and grounded generation. <span class="font-mono">github.com/suhaasdev/rag-agent</span></li>
+<li><strong class="text-neutral-900 dark:text-white">ml-demos —</strong> Public collection of hands-on ML demos and notebooks. <span class="font-mono">github.com/suhaasdev/ml-demos</span></li>
+</ul>
+</div>
+<div class="space-y-2 text-xs">
+<h4 class="font-mono uppercase tracking-widest text-neutral-500 border-b border-black/5 dark:border-white/5 pb-1">Soft Skills</h4>
+<p class="text-neutral-600 dark:text-neutral-300">Critical Thinking · Effective Communication · Problem Solving · Teamwork &amp; Collaboration · Time Management · Leadership</p>
+</div>
+<div class="space-y-2 text-xs">
+<h4 class="font-mono uppercase tracking-widest text-neutral-500 border-b border-black/5 dark:border-white/5 pb-1">Certificates</h4>
+<ul class="grid grid-cols-1 sm:grid-cols-2 gap-1 list-disc list-inside text-neutral-600 dark:text-neutral-300">
+<li>Data Analyst 101 Certificate</li>
+<li>Python Essentials Certificate</li>
+<li>Machine Learning Using Python Certificate</li>
+<li>Google Cloud AI Tools Certificate</li>
+<li>Google Developers Hackathon Participation Certificate</li>
+<li>C Essentials Certificate</li>
+</ul>
+</div>
+<div class="pt-4 border-t border-black/10 dark:border-white/10 flex flex-wrap gap-3 justify-between items-center text-xs font-mono text-neutral-500">
+<span class="">Digitally Signed: P.R.S. Suhaas</span>
+<div class="flex gap-3">
+<a href="Suhaas-Resume.pdf" download="Pisupati-Raghavendra-Sree-Suhaas-Resume.pdf" class="hover:underline text-neutral-900 dark:text-white font-semibold">Download PDF →</a>
+<button class="hover:underline text-neutral-900 dark:text-white" onclick="window.print()">Print →</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 08 CONTACT SECTION -->
+<section class="space-y-8 reveal-on-scroll" id="contact">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-black/10 dark:border-white/10 pb-4">
+<div>
+<span class="text-xs font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">08 — CONTACT</span>
+<h2 class="font-wasted-vindey text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-white mt-1">Let's build something</h2>
+</div>
+<span class="text-xs font-mono text-neutral-500 dark:text-neutral-400">OPEN TO COLLABORATIONS</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-5 space-y-4">
+<div class="liquid-glass rounded-3xl p-6 sm:p-7 space-y-4 text-xs font-mono">
+<h3 class="text-base font-bold text-neutral-900 dark:text-white font-sans">Direct Channels</h3>
+<a class="flex items-center gap-3 p-3 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition" href="tel:+917569317089">
+<i class="fa-solid fa-phone text-sm"></i>
+<div>
+<div class="text-[10px] text-neutral-500">PHONE</div>
+<div class="font-semibold text-neutral-900 dark:text-white">+91 75693 17089</div>
+</div>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition" href="mailto:sreesuhaas04@gmail.com">
+<i class="fa-regular fa-envelope text-sm"></i>
+<div>
+<div class="text-[10px] text-neutral-500">EMAIL</div>
+<div class="font-semibold text-neutral-900 dark:text-white">sreesuhaas04@gmail.com</div>
+</div>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition" href="https://github.com/suhaasdev" target="_blank" rel="noopener">
+<i class="fa-brands fa-github text-sm"></i>
+<div>
+<div class="text-[10px] text-neutral-500">GITHUB</div>
+<div class="font-semibold text-neutral-900 dark:text-white">suhaasdev</div>
+</div>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition" href="https://linkedin.com/in/raghavendra-sree-suhaas-pisupati" target="_blank" rel="noopener">
+<i class="fa-brands fa-linkedin text-sm"></i>
+<div>
+<div class="text-[10px] text-neutral-500">LINKEDIN</div>
+<div class="font-semibold text-neutral-900 dark:text-white">Raghavendra Sree Suhaas Pisupati</div>
+</div>
+</a>
+</div>
+</div>
+<div class="lg:col-span-7">
+<div class="liquid-glass rounded-3xl p-6 sm:p-8 space-y-4">
+<h3 class="text-base font-bold text-neutral-900 dark:text-white">Send a Direct Transmission</h3>
+<form class="space-y-4 text-xs font-mono" id="contactForm">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="text-[10px] text-neutral-500">YOUR NAME</label>
+<input class="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/15 rounded-2xl px-4 py-2.5 text-neutral-900 dark:text-white focus:outline-none" placeholder="Dr. Jane Doe" required="" type="text">
+</div>
+<div class="space-y-1">
+<label class="text-[10px] text-neutral-500">YOUR EMAIL</label>
+<input class="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/15 rounded-2xl px-4 py-2.5 text-neutral-900 dark:text-white focus:outline-none" placeholder="jane@organization.com" required="" type="email">
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-[10px] text-neutral-500">MESSAGE</label>
+<textarea class="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/15 rounded-2xl px-4 py-2.5 text-neutral-900 dark:text-white focus:outline-none" placeholder="Hello Suhaas, let's discuss an ML opportunity..." required="" rows="4"></textarea>
+</div>
+<button class="w-full py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black font-semibold text-xs tracking-wider uppercase hover:opacity-90 transition" type="submit">
+                Send Message
+              </button>
+</form>
+<div class="hidden p-3 rounded-xl bg-black/5 dark:bg-white/10 text-center text-xs font-mono text-neutral-800 dark:text-neutral-200" id="contactFeedback">
+              ✓ Transmission received! Suhaas will respond via email shortly.
+            </div>
+</div>
+</div>
+</div>
+</section>
+<!-- FOOTER -->
+<footer class="liquid-glass rounded-3xl p-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-xs font-mono text-neutral-500">
+<div>
+<div class="flex items-center gap-2">
+<img src="logo.png" alt="Suhaas logo" class="w-6 h-6 rounded-full object-cover" onerror="this.remove()">
+<span class="font-wasted-vindey font-bold text-neutral-900 dark:text-white text-sm">P.R.S. SUHAAS</span>
+</div>
+<div class="mt-1">© 2026 Pisupati Raghavendra Sree Suhaas. Built from scratch.</div>
+</div>
+<div class="flex items-center gap-4">
+<a class="hover:underline" href="https://github.com/suhaasdev" target="_blank" rel="noopener">GitHub</a>
+<a class="hover:underline" href="https://linkedin.com/in/raghavendra-sree-suhaas-pisupati" target="_blank" rel="noopener">LinkedIn</a>
+<button class="hover:underline text-neutral-900 dark:text-white" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Back to top ↑</button>
+</div>
+</footer>
+</main>
+<!-- MODAL: CERTIFICATE PREVIEW -->
+<div class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-md" id="certModal">
+<div class="liquid-glass rounded-3xl max-w-md w-full p-6 space-y-4 relative">
+<button class="absolute top-4 right-4 text-xs w-7 h-7 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center" onclick="document.getElementById('certModal').classList.add('hidden'); document.getElementById('certModal').classList.remove('flex');">
+<i class="fa-solid fa-xmark"></i>
+</button>
+<div class="text-center space-y-2 pt-2">
+<i class="fa-solid fa-certificate text-3xl text-neutral-900 dark:text-white"></i>
+<h3 class="font-wasted-vindey text-lg font-bold text-neutral-900 dark:text-white" id="modalCertTitle">Certificate Preview</h3>
+<p class="text-xs font-mono text-neutral-500" id="modalCertIssuer">Issuer Authority</p>
+</div>
+<div class="p-4 rounded-2xl bg-black/5 dark:bg-white/5 text-xs font-mono space-y-1.5">
+<div class=""><strong>Recipient:</strong> Pisupati Raghavendra Sree Suhaas</div>
+<div class=""><strong>Status:</strong> Verified Credential</div>
+<div class=""><strong>Institution:</strong> MVGR / Partner Organization</div>
+</div>
+<button class="w-full py-2.5 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-semibold" onclick="document.getElementById('certModal').classList.add('hidden'); document.getElementById('certModal').classList.remove('flex');">
+        Dismiss
+      </button>
+</div>
+</div>
+<!-- MODAL: RESUME QUICK VIEW -->
+<div class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-md" id="resumeModal">
+<div class="liquid-glass rounded-3xl max-w-lg w-full p-6 space-y-4 relative">
+<button class="absolute top-4 right-4 text-xs w-7 h-7 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center" onclick="document.getElementById('resumeModal').classList.add('hidden'); document.getElementById('resumeModal').classList.remove('flex');">
+<i class="fa-solid fa-xmark"></i>
+</button>
+<div class="space-y-1">
+<span class="text-[10px] font-mono uppercase bg-black/10 dark:bg-white/10 px-2 py-0.5 rounded-full">Curriculum Vitae</span>
+<h3 class="font-wasted-vindey text-lg font-bold text-neutral-900 dark:text-white">Pisupati Raghavendra Sree Suhaas</h3>
+<p class="text-xs font-mono text-neutral-500">MVGR College of Engineering · B.Tech CSE</p>
+</div>
+<div class="p-4 rounded-2xl bg-black/5 dark:bg-white/5 text-xs font-mono space-y-2">
+<div class=""><strong>Focus:</strong> Python, SQL, Supervised/Unsupervised Learning, NLP, Predictive Modelling, Pandas, NumPy, Matplotlib, Seaborn, Tableau, Power BI, Docker, Kafka.</div>
+<div class=""><strong>Internships:</strong> Thiranex (Data Science) · ScholarX (ML Engineering) · Internlink (Web Development).</div>
+<div class=""><strong>Projects:</strong> SunnyClass AI · Multi-Agent Commerce OS · Face ID + Blockchain · Voice RAG · tinyml-gestures · deepfake-cvit · rag-agent · ml-demos.</div>
+<div class=""><strong>Direct Contact:</strong> +91 75693 17089 | sreesuhaas04@gmail.com | github.com/suhaasdev</div>
+</div>
+<div class="flex gap-2">
+<a href="Suhaas-Resume.pdf" download="Pisupati-Raghavendra-Sree-Suhaas-Resume.pdf" class="flex-1 py-2.5 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-semibold text-center">
+          Download PDF
+        </a>
+<button class="flex-1 py-2.5 rounded-xl liquid-glass text-xs font-semibold" onclick="document.getElementById('resumeModal').classList.add('hidden'); document.getElementById('resumeModal').classList.remove('flex');">
+          Close
+        </button>
+</div>
+</div>
+</div>
+<!-- SOFFIT WEBGL2 KERNEL & SCRIPTS -->
+<script>
+    const CONFIG = {
+      bgColor: "#ffffff",
+      colorA: "#ffffff",
+      colorB: "#ffffff",
+      colorC: "#ffffff",
+      colorD: "#000000",
+      ambient: 0.24,
+      amount: 0.2,
+      bounce: 0.38,
+      bounceCurve: 4.25,
+      breathe: 0.29,
+      contrast: 2.45,
+      cursor: 1,
+      curve: 3.32,
+      direct: 0.97,
+      dither: 0.58,
+      flow: 0.475,
+      glow: 0.38,
+      grain: 0,
+      grainAnim: 0,
+      horizon: 0.36,
+      lacunarity: 1.99,
+      lift: 0.11,
+      maxDpr: 1,
+      midpoint: 0.57,
+      moteScale: 7,
+      motes: 0.074,
+      parallax: 0.0137,
+      rock: 0.12,
+      roughness: 0.29,
+      scale: 1,
+      sink: 0.24,
+      speed: 0.33,
+      spillCentre: 0.3,
+      spillFloor: 0.26,
+      spillWidth: 2.18,
+      spread: 0.41,
+      steer: -0.13,
+      sweep: 0.5,
+      tilt: 1.87,
+      vignette: 0.21,
+      warp: 2.58,
+      warpScale: 0.78
+    };
+
+    function hexToVec3(hex) {
+      const clean = hex.replace('#', '');
+      const num = parseInt(clean, 16);
+      return [((num >> 16) & 255) / 255, ((num >> 8) & 255) / 255, (num & 255) / 255];
+    }
+
+    const canvas = document.getElementById('gl');
+    const gl = canvas.getContext('webgl2', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'high-performance' });
+    if (!gl) {
+      // CSS fallback if WebGL2 unavailable (older phones) — monochrome Soffit-like wash
+      document.documentElement.style.background = '#000';
+      canvas.style.display = 'none';
+      document.body.insertAdjacentHTML('afterbegin', '<div style=\"position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 90% at 15% 0%, #fff 0%, #888 18%, #000 55%), radial-gradient(120% 90% at 90% 100%, #fff 0%, #666 20%, #000 60%), #000\"></div>');
+    }
+
+    if (gl) {
+      const VERT = `#version 300 es
+      void main() {
+        vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+        gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+      }`;
+
+      const FRAG = `#version 300 es
+      precision highp float;
+      out vec4 fragColor;
+      uniform vec2  iResolution;
+      uniform float iTime;
+      uniform vec2  iMouse;
+      uniform float uScale;
+      uniform vec3  uBg, uColorA, uColorB, uColorC, uColorD;
+      uniform float uSpeed, uTilt, uRock, uHorizon, uBreathe, uSpread, uCurve, uDirect;
+      uniform float uBounce, uBounceCurve;
+      uniform float uSpillCentre, uSpillWidth, uSpillFloor;
+      uniform float uAmount, uWarp, uWarpScale, uFlow, uRoughness, uLacunarity, uMotes, uMoteScale;
+      uniform float uAmbient, uContrast, uMidpoint, uSink, uGlow;
+      uniform float uGrain, uDither, uVignette;
+      uniform float uSteer, uLift, uSweep, uParallax;
+      uniform float uGrainAnim;
+      #define OCTAVES 4
+      vec2 hash2(vec2 p) {
+        p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+        return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+      }
+      float snoise(vec2 p) {
+        const float K1 = 0.366025404, K2 = 0.211324865;
+        vec2 i = floor(p + (p.x + p.y) * K1);
+        vec2 a = p - i + (i.x + i.y) * K2;
+        float m = step(a.y, a.x);
+        vec2 o = vec2(m, 1.0 - m);
+        vec2 b = a - o + K2;
+        vec2 c = a - 1.0 + 2.0 * K2;
+        vec3 h = max(0.5 - vec3(dot(a, a), dot(b, b), dot(c, c)), 0.0);
+        vec3 n = h * h * h * h * vec3(dot(a, hash2(i)), dot(b, hash2(i + o)), dot(c, hash2(i + 1.0)));
+        return dot(n, vec3(70.0));
+      }
+      float fbm(vec2 p) {
+        float v = 0.0, amp = 0.5;
+        for (int i = 0; i < OCTAVES; i++) {
+          v += amp * snoise(p);
+          p *= uLacunarity;
+          amp *= uRoughness;
+        }
+        return v;
+      }
+      vec3 ramp4(float t) {
+        vec3 c = mix(uColorA, uColorB, smoothstep(0.00, 0.36, t));
+        c = mix(c, uColorC, smoothstep(0.32, 0.70, t));
+        c = mix(c, uColorD, smoothstep(0.66, 1.00, t));
+        return c;
+      }
+      float triDither(vec2 fc) {
+        float a = fract(sin(dot(fc, vec2(12.9898, 78.233))) * 43758.5453);
+        float b = fract(sin(dot(fc + 17.0, vec2(12.9898, 78.233))) * 43758.5453);
+        return (a + b - 1.0) / 255.0;
+      }
+      float houseGrain(vec2 fc) {
+        uvec2 q = uvec2(fc) * uvec2(1597334677u, 3812015801u)
+                + uint(floor(iTime * 24.0 * uGrainAnim)) * 2654435769u;
+        uint n = q.x ^ q.y; n = n * 1664525u + 1013904223u; n ^= n >> 16u; n *= 2246822519u; n ^= n >> 13u;
+        float a = float(n & 0xffffu) / 65535.0;
+        n *= 3266489917u; n ^= n >> 16u;
+        float b = float(n & 0xffffu) / 65535.0;
+        return a + b - 1.0;
+      }
+      void main() {
+        vec2 uv = (gl_FragCoord.xy - 0.5 * iResolution) / iResolution.y;
+        uv *= uScale;
+        vec2 iM = iMouse * uScale;
+        float t = iTime * uSpeed;
+        vec2 p = uv - iM * uParallax;
+        float tilt = uTilt + sin(t * 0.13) * uRock + iM.x * uSteer;
+        vec2 dir = vec2(cos(tilt), sin(tilt));
+        float axis = dot(p, dir);
+        float across = dot(p, vec2(-dir.y, dir.x));
+        vec2 q = vec2(fbm(p * uWarpScale + vec2(0.0, t * uFlow)),
+                      fbm(p * uWarpScale + vec2(5.2, 1.3) - t * uFlow * 0.7));
+        float air = fbm(p + uWarp * q + vec2(t * 0.12, -t * 0.09)) * 0.5 + 0.5;
+        float horizon = uHorizon + sin(t * 0.09 + 2.1) * uBreathe - iM.y * uLift;
+        float alt = clamp(0.5 + (axis - horizon) * uSpread + (air - 0.5) * uAmount, 0.0, 1.0);
+        float ac = (across - uSpillCentre - iM.x * uSweep) / max(0.05, uSpillWidth);
+        float spill = mix(uSpillFloor, 1.0, exp(-ac * ac));
+        float direct = pow(alt, max(0.05, uCurve)) * uDirect * spill;
+        float bounce = uBounce * pow(1.0 - alt, max(0.05, uBounceCurve));
+        float f = uAmbient + direct + bounce;
+        f += uMotes * snoise(p * uMoteScale + vec2(-t * 0.5, t * 0.35)) * 0.5 * alt;
+        f = clamp((f - uMidpoint) * uContrast + 0.5, 0.0, 1.0);
+        vec3 col = ramp4(f);
+        col += uColorD * uGlow * pow(f, 4.0);
+        col = mix(uBg, col, smoothstep(0.0, max(0.01, uSink), f) * 0.90 + 0.10);
+        col *= 1.0 - uVignette * dot(uv, uv);
+        { float hgL = clamp(dot(col, vec3(0.299, 0.587, 0.114)), 0.0, 1.0);
+          col += houseGrain(gl_FragCoord.xy) * uGrain * mix(1.0, 4.0 * hgL * (1.0 - hgL), 0.6); }
+        col += triDither(gl_FragCoord.xy) * uDither;
+        fragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+      }`;
+
+      function compile(type, src) {
+        const sh = gl.createShader(type);
+        gl.shaderSource(sh, src);
+        gl.compileShader(sh);
+        if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh));
+        return sh;
+      }
+      const program = gl.createProgram();
+      gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT));
+      gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAG));
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+      gl.useProgram(program);
+      gl.bindVertexArray(gl.createVertexArray());
+
+      const LOC = {};
+      const loc = n => (n in LOC ? LOC[n] : (LOC[n] = gl.getUniformLocation(program, n)));
+      const u1f = (n, v) => gl.uniform1f(loc(n), v);
+      const u2f = (n, x, y) => gl.uniform2f(loc(n), x, y);
+      const u3c = (n, hex) => { const c = hexToVec3(hex); gl.uniform3f(loc(n), c[0], c[1], c[2]); };
+
+      function applyConfig() {
+        gl.useProgram(program);
+        u3c('uBg', CONFIG.bgColor);
+        u3c('uColorA', CONFIG.colorA);
+        u3c('uColorB', CONFIG.colorB);
+        u3c('uColorC', CONFIG.colorC);
+        u3c('uColorD', CONFIG.colorD);
+        u1f('uScale', CONFIG.scale);
+        u1f('uSpeed', CONFIG.speed);
+        u1f('uTilt', CONFIG.tilt);
+        u1f('uRock', CONFIG.rock);
+        u1f('uHorizon', CONFIG.horizon);
+        u1f('uBreathe', CONFIG.breathe);
+        u1f('uSpread', CONFIG.spread);
+        u1f('uCurve', CONFIG.curve);
+        u1f('uDirect', CONFIG.direct);
+        u1f('uBounce', CONFIG.bounce);
+        u1f('uBounceCurve', CONFIG.bounceCurve);
+        u1f('uSpillCentre', CONFIG.spillCentre);
+        u1f('uSpillWidth', CONFIG.spillWidth);
+        u1f('uSpillFloor', CONFIG.spillFloor);
+        u1f('uAmount', CONFIG.amount);
+        u1f('uWarp', CONFIG.warp);
+        u1f('uWarpScale', CONFIG.warpScale);
+        u1f('uFlow', CONFIG.flow);
+        u1f('uRoughness', CONFIG.roughness);
+        u1f('uLacunarity', CONFIG.lacunarity);
+        u1f('uMotes', CONFIG.motes);
+        u1f('uMoteScale', CONFIG.moteScale);
+        u1f('uAmbient', CONFIG.ambient);
+        u1f('uContrast', CONFIG.contrast);
+        u1f('uMidpoint', CONFIG.midpoint);
+        u1f('uSink', CONFIG.sink);
+        u1f('uGlow', CONFIG.glow);
+        u1f('uGrain', CONFIG.grain);
+        u1f('uGrainAnim', CONFIG.grainAnim);
+        u1f('uDither', CONFIG.dither);
+        u1f('uVignette', CONFIG.vignette);
+        u1f('uSteer', CONFIG.steer);
+        u1f('uLift', CONFIG.lift);
+        u1f('uSweep', CONFIG.sweep);
+        u1f('uParallax', CONFIG.parallax);
+        resize();
+      }
+
+      let dpr = 1;
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, CONFIG.maxDpr);
+        const w = Math.max(1, Math.round(innerWidth * dpr));
+        const h = Math.max(1, Math.round(innerHeight * dpr));
+        if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+        gl.viewport(0, 0, w, h);
+        gl.useProgram(program);
+        u2f('iResolution', w, h);
+      }
+      let resizeQueued = false;
+      addEventListener('resize', () => {
+        if (resizeQueued) return;
+        resizeQueued = true;
+        requestAnimationFrame(() => { resizeQueued = false; resize(); });
+      }, { passive: true });
+
+      const mouse = { x: 0, y: 0, ax: 0, ay: 0, tx: 0, ty: 0 };
+      const aim = e => {
+        const a = innerWidth / innerHeight;
+        mouse.tx = (e.clientX / innerWidth - 0.5) * a;
+        mouse.ty = (0.5 - e.clientY / innerHeight);
+      };
+      addEventListener('pointermove', aim, { passive: true });
+      addEventListener('pointerdown', aim, { passive: true });
+
+      let visible = true;
+      new IntersectionObserver(es => { visible = es[0].isIntersecting }, { threshold: 0 }).observe(canvas);
+
+      const t0 = performance.now();
+      let prevT = t0, clock = 0, fpsT = t0, fpsN = 0;
+      function frame(now) {
+        requestAnimationFrame(frame);
+        const raw = now - prevT;
+        prevT = now;
+        if (!visible || document.hidden) return;
+        const ms = raw > 50 ? 50 : raw < 4.167 ? 4.167 : raw;
+        const s = ms > 36.7 ? 2.2 : ms * 0.06;
+        clock += ms * 0.001;
+
+        const kLead = 0.105 * s, kBody = 0.043 * s;
+        mouse.ax += (mouse.tx - mouse.ax) * kLead;
+        mouse.ay += (mouse.ty - mouse.ay) * kLead;
+        mouse.x  += (mouse.ax - mouse.x)  * kBody;
+        mouse.y  += (mouse.ay - mouse.y)  * kBody;
+
+        u1f('iTime', clock);
+        if (mouse.rest === undefined) mouse.rest = { x: mouse.tx, y: mouse.ty };
+        if (!CONFIG.cursor) { mouse.tx = mouse.rest.x; mouse.ty = mouse.rest.y; }
+        u2f('iMouse', mouse.x, mouse.y);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        fpsN++;
+        if (now - fpsT > 500) { fpsT = now; fpsN = 0; }
+      }
+      applyConfig();
+      gl.drawArrays(gl.TRIANGLES, 0, 3)        // one draw before the reveal, so we never fade onto a blank canvas
+      requestAnimationFrame(frame);
+    }
+
+    // THEME SWITCH LOGIC
+    const htmlEl = document.documentElement;
+    const lightBtn = document.getElementById('themeLightBtn');
+    const darkBtn = document.getElementById('themeDarkBtn');
+
+    function setTheme(isDark) {
+      if (isDark) {
+        htmlEl.classList.add('dark');
+        darkBtn.className = 'px-3 py-1 rounded-full text-xs font-medium transition flex items-center gap-1.5 bg-black/10 dark:bg-white/20 text-neutral-900 dark:text-white shadow-sm font-semibold';
+        lightBtn.className = 'px-3 py-1 rounded-full text-xs font-medium transition flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white';
+      } else {
+        htmlEl.classList.remove('dark');
+        lightBtn.className = 'px-3 py-1 rounded-full text-xs font-medium transition flex items-center gap-1.5 bg-black/10 dark:bg-white/20 text-neutral-900 dark:text-white shadow-sm font-semibold';
+        darkBtn.className = 'px-3 py-1 rounded-full text-xs font-medium transition flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white';
+      }
+    }
+    lightBtn.addEventListener('click', () => setTheme(false));
+    darkBtn.addEventListener('click', () => setTheme(true));
+
+    // MOBILE MENU
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+    // PROJECT FILTERING
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-black', 'text-white', 'dark:bg-white', 'dark:text-black', 'active');
+          b.classList.add('liquid-glass', 'text-neutral-700', 'dark:text-neutral-300');
+        });
+        btn.classList.add('bg-black', 'text-white', 'dark:bg-white', 'dark:text-black', 'active');
+        btn.classList.remove('liquid-glass', 'text-neutral-700', 'dark:text-neutral-300');
+
+        const filter = btn.getAttribute('data-filter');
+        projectCards.forEach(card => {
+          const category = card.getAttribute('data-category');
+          if (filter === 'all' || category === filter) {
+            card.classList.remove('hidden-filter');
+          } else {
+            card.classList.add('hidden-filter');
+          }
+        });
+      });
+    });
+
+    // SUNNY AI CHAT
+    const aiForm = document.getElementById('aiForm');
+    const aiInput = document.getElementById('aiInput');
+    const aiChatOutput = document.getElementById('aiChatOutput');
+    const promptBtns = document.querySelectorAll('.ai-prompt-btn');
+
+    function sunnyAnswer(q) {
+      const lower = ' ' + q.toLowerCase().trim() + ' ';
+      const has = (...ws) => ws.some(w => lower.includes(w));
+      const GH = 'github.com/suhaasdev';
+      if (has('hello', ' hi ', ' hey ', 'namaste', 'hii')) return '✦ Hello! I am Sunny AI. Ask me about Suhaas — skills, internships, 15 projects, certificates, education, contact, or resume.';
+      if (has('who are you', 'your name', 'about sunny')) return '✦ I am Sunny AI, indexing Suhaas\u2019s portfolio: 3rd-year B.Tech CSE at MVGR, ML/Data internships, 15 projects, 9 certificates.';
+      if (has('who is suhaas', 'about suhaas', 'profile', 'overview', 'about yourself', 'introduce')) return '✦ Pisupati Raghavendra Sree Suhaas — aspiring ML Engineer & Data Analyst. Python, SQL, ML, analytics. ScholarX ML intern, ex-Thiranex Data Science, Internlink Web. 15 projects, MVGR CSE 3rd year.';
+      if (has('education', 'college', 'mvgr', 'university', 'degree', 'b.tech', 'coursework', 'study')) return '✦ MVGR College of Engineering (Autonomous), B.Tech CSE 2024–2028, 3rd year. Coursework: Data Structures, OOP, Computer Networks, Operating Systems, Machine Learning.';
+      if (has('scholarx')) return '✦ ScholarX — ML Engineering Intern (current). FastAPI + scikit-learn + joblib inference service, feature validation pipeline, monitored endpoint with metrics/logging/health checks.';
+      if (has('thiranex')) return '✦ Thiranex — Data Science Internship (06 May–05 Jun 2026, MSME certified). Preprocessing, EDA, model building with Pandas/NumPy/visualization.';
+      if (has('internlink', 'web dev internship', 'web internship')) return '✦ Internlink — Web Development Intern (issued 30 Dec 2025). Skill tasks, UI components, REST bindings with JS/Tailwind.';
+      if (has('experience', 'internship', 'internships', 'work', 'role', 'job')) return '✦ 3 internships: ScholarX (ML Engineering, current), Thiranex (Data Science, MSME), Internlink (Web Dev). Plus 15 shipped projects across ML/Data/Backend/NLP/Systems.';
+      if (has('skill', 'tech stack', 'stack', 'language', 'tool', 'framework', 'library')) return '✦ Python 92%, SQL, C 75%, C++ 72%. Scikit-learn, Pandas, NumPy, TensorFlow/Keras, OpenCV, FastAPI, Tableau/Power BI, Git/Docker/Jupyter/Kafka.';
+      if (has('sunnyclass', 'sunny class', 'classroom')) return '✦ SunnyClass AI — AI classroom monitoring: attendance/engagement/participation via CV + real-time analytics. Repo: ' + GH + '/SunnyClass';
+      if (has('multi-agent', 'commerce os', 'commerce')) return '✦ Multi-Agent Commerce OS — 8 AI agents observe/investigate/collaborate under deterministic governance. Repo: ' + GH + '/commerce-os';
+      if (has('face id', 'face-id', 'blockchain')) return '✦ Face ID + Blockchain — face detect/encode, reverse-image verify, blockchain record. Repo: ' + GH + '?tab=repositories';
+      if (has('voice', 'voice rag', 'voice-enabled')) return '✦ Voice-Enabled RAG — speech-to-text, chunking, FAISS retrieval, grounded generation + guardrails. Repo: ' + GH + '?tab=repositories';
+      if (has('tinyml', 'tiny ml', 'gesture')) return '✦ tinyml-gestures — on-device gesture recognition: IMU capture, TensorFlow, TFLite quant, MCU inference. Repo: ' + GH + '/tinyml-gestures';
+      if (has('deepfake', 'cvit', 'fake detection')) return '✦ deepfake-cvit — deepfake detection with vision transformers, artifact learning. Repo: ' + GH + '/deepfake-cvit';
+      if (has('rag-agent') || (has('rag') && has('agent'))) return '✦ rag-agent — RAG agent: optimized chunking, vector search, grounded generation. Repo: ' + GH + '/rag-agent';
+      if (has('rag') || has('retrieval')) return '✦ RAG work: rag-agent (text RAG) + Voice-Enabled RAG (speech + retrieval + guardrails). Repos: ' + GH + '/rag-agent, ' + GH + '?tab=repositories';
+      if (has('ml-demos', 'ml demos', 'demos')) return '✦ ml-demos — public ML demo/notebook collection. Repo: ' + GH + '/ml-demos';
+      if (has('crop')) return '✦ AI Crop Recommendation — soil/climate → optimal crop pipeline. Repo: ' + GH + '/AI-Crop-Recommendation-System-';
+      if (has('churn')) return '✦ Customer Churn Prediction — classification + feature engineering. Repo: ' + GH + '/Customer-Churn-Prediction';
+      if (has('retail', 'sales dashboard')) return '✦ Retail Sales Dashboard — Power BI/SQL/DAX sales analytics. Repo: ' + GH + '/Retail-Sales-Analysis-Dashboard';
+      if (has('finance')) return '✦ Finance Data Analysis — revenue/spending/KPI EDA. Repo: ' + GH + '/Finance-Data-Analysis';
+      if (has('medical', 'billing')) return '✦ Medical Billing System — C console app, data structures, file I/O. Repo: ' + GH + '/Medical-Billing-System';
+      if (has('weather')) return '✦ Weather Prediction — historical-data ML forecasting. Repo: ' + GH + '/Weather-Prediction';
+      if (has('sentiment', 'nlp', 'nltk')) return '✦ Sentiment Analysis — NLP positive/negative/neutral classifier. Repo: ' + GH + '/Sentiment-Analysis';
+      if (has('fastapi', 'inference service', 'api') && !has('monitored') && !has('validation')) return '✦ FastAPI ML Inference Service — production REST, Pydantic validation, docs. Repo: ' + GH + '/FastAPI-ML-Inference-Service';
+      if (has('validation', 'feature validation', 'pipeline') && !has('youtube') && !has('shorts')) return '✦ Feature Validation Pipeline — schema/outlier/missing-value checks pre-inference. Repo: ' + GH + '/Feature-Validation-Pipeline';
+      if (has('monitored', 'monitoring', 'logging')) return '✦ Monitored ML Prediction API — logging, tracking, health checks. Repo: ' + GH + '/Monitored-ML-Prediction-API';
+      if (has('youtube', 'shorts')) return '✦ YouTube Shorts Analytics Pipeline — engagement/reach/trends. Repo: ' + GH + '/YouTube-Shorts-Analytics-Pipeline1';
+      if (has('project', 'projects', 'repo', 'repos', 'github', 'build', 'portfolio', 'list all')) return '✦ 15 projects: SunnyClass AI, Commerce OS, FaceID+Blockchain, Voice RAG, Crop, Churn, Retail, Finance, Medical Billing, Weather, Sentiment, FastAPI Inference, Validation Pipeline, Monitored API, Shorts Analytics + tinyml-gestures, deepfake-cvit, rag-agent, ml-demos. All at ' + GH + '. Ask any name for details.';
+      if (has('certif', 'certificate', 'certification', 'course')) return '✦ 9 certificates: Thiranex DS (MSME), ScholarX ML, Internlink Web, Data Analyst 101, Python Essentials, ML with Python, Google Cloud AI, GDG TechSprint 2026, C Essentials.';
+      if (has('resume', 'cv', 'download')) return '✦ Download resume via top Resume button / Resume section Download PDF (Suhaas-Resume.pdf). Profile: ML/Data, MVGR 3rd year, 3 internships, 15 projects.';
+      if (has('contact', 'email', 'phone', 'mobile', 'number', 'linkedin', 'reach', 'hire')) return '✦ Contact: +91 75693 17089, sreesuhaas04@gmail.com, GitHub suhaasdev, LinkedIn raghavendra-sree-suhaas-pisupati. Open to ML internships & collabs.';
+      if (has('location', 'where', 'city', 'vizianagaram', 'address')) return '✦ Based Vizianagaram, India. MVGR College of Engineering. Open to remote/intern roles.';
+      if (has('available', 'availability', 'open to', 'hire', 'opportunity', 'collab')) return '✦ Open to ML Engineering internships & collaborations — inference APIs, pipelines, analytics.';
+      if (has('thank', 'thanks', 'great', 'nice', 'awesome', 'bye', 'goodbye')) return '✦ You\u2019re welcome! Ask about any project, skill, internship, or type \u201Cresume\u201D for download info.';
+      if (has('help', 'what can you', 'options', 'menu')) return '✦ Try: \u201CList projects\u201D, \u201CTell me about SunnyClass AI\u201D, \u201CSkills?\u201D, \u201CExperience?\u201D, \u201CCertifications?\u201D, \u201CContact?\u201D, \u201CResume?\u201D';
+      const kw = lower.trim().split(/\s+/).filter(w => w.length > 3);
+      const topics = ['sunnyclass:SunnyClass AI classroom analytics','tinyml:TinyML gestures','deepfake:deepfake-cvit','rag:RAG agents','scholarx:ScholarX ML role','thiranex:Thiranex DS','skills:Python/SQL/ML stack','certificates:9 certs','contact:email/phone/GitHub','resume:PDF download'];
+      const hit = topics.find(t => kw.some(k => t.includes(k.slice(0,5))));
+      if (hit) return '✦ Related: ' + hit.split(':')[1] + '. Ask specifically — e.g. \u201CTell me about ' + hit.split(':')[0] + '\u201D — or try \u201CList projects\u201D / \u201CSkills?\u201D / \u201CContact?\u201D.';
+      return '✦ I can answer anything on this portfolio: 15 projects, internships (ScholarX/Thiranex/Internlink), skills, MVGR education, 9 certificates, contact, resume. Try \u201CList projects\u201D or \u201CWhat is ScholarX role?\u201D';
+    }
+    function sendAiQuery(q) {
+      if (!q || !q.trim()) return;
+      const userMsg = document.createElement('div');
+      userMsg.className = 'p-2 rounded-xl bg-black/10 dark:bg-white/10 text-neutral-900 dark:text-white text-right';
+      userMsg.textContent = 'You: ' + q.trim().slice(0, 300);
+      aiChatOutput.appendChild(userMsg);
+      aiChatOutput.scrollTop = aiChatOutput.scrollHeight;
+      const typing = document.createElement('div');
+      typing.className = 'p-2 rounded-xl bg-black/5 dark:bg-white/10 text-neutral-500 dark:text-neutral-400';
+      typing.textContent = '✦ Sunny is typing…';
+      aiChatOutput.appendChild(typing);
+      aiChatOutput.scrollTop = aiChatOutput.scrollHeight;
+      const reply = sunnyAnswer(q);
+      setTimeout(() => {
+        typing.remove();
+        const respMsg = document.createElement('div');
+        respMsg.className = 'p-2 rounded-xl bg-black/5 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 leading-relaxed';
+        respMsg.textContent = reply;
+        aiChatOutput.appendChild(respMsg);
+        aiChatOutput.scrollTop = aiChatOutput.scrollHeight;
+      }, 280);
+    }
+
+    aiForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      sendAiQuery(aiInput.value);
+      aiInput.value = '';
+    });
+    promptBtns.forEach(btn => btn.addEventListener('click', () => sendAiQuery(btn.getAttribute('data-query'))));
+
+    // CERT MODAL
+    document.querySelectorAll('.cert-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.getElementById('modalCertTitle').textContent = card.getAttribute('data-title');
+        document.getElementById('modalCertIssuer').textContent = card.getAttribute('data-issuer');
+        const modal = document.getElementById('certModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+    });
+
+    // CONTACT FORM
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('contactFeedback').classList.remove('hidden');
+      e.target.reset();
+    });
+  </script>
+<script>
+  // SCROLL PROGRESS BAR (rAF-throttled, mobile safe)
+  const progressBar = document.getElementById('scrollProgress');
+  let ticking = false;
+  function updateProgress() {
+    ticking = false;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+    if (progressBar) progressBar.style.width = scrolled + '%';
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(updateProgress); }
+  }, { passive: true });
+
+  // SCROLL REVEAL OBSERVER (works phone/tablet/laptop)
+  const revealObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
+
+  // CUSTOM CURSOR — dot leads, ring chases (Soffit-style two-pole lerp), desktop only
+  (function() {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    if (!dot || !ring) return;
+    let mx = -100, my = -100, rx = -100, ry = -100, scale = 1, tScale = 1;
+    addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+    addEventListener('pointerdown', () => { ring.classList.add('click'); setTimeout(() => ring.classList.remove('click'), 200); }, { passive: true });
+    document.querySelectorAll('a, button, .project-card, .cert-card, input, textarea, label').forEach(el => {
+      el.addEventListener('pointerenter', () => { tScale = 1.7; ring.classList.add('grow'); });
+      el.addEventListener('pointerleave', () => { tScale = 1; ring.classList.remove('grow'); });
+    });
+    (function loop() {
+      requestAnimationFrame(loop);
+      rx += (mx - rx) * 0.16;
+      ry += (my - ry) * 0.16;
+      scale += (tScale - scale) * 0.18;
+      dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
+      ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%) scale(${scale.toFixed(3)})`;
+    })();
+    // Magnetic pull for primary CTAs
+    document.querySelectorAll('.magnetic').forEach(btn => {
+      btn.addEventListener('pointermove', e => {
+        const r = btn.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width / 2) * 0.18;
+        const y = (e.clientY - r.top - r.height / 2) * 0.28;
+        btn.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(1.04)`;
+      });
+      btn.addEventListener('pointerleave', () => { btn.style.transform = ''; });
+    });
+  })();
+
+  // 3D TILT WITH DEPTH + SPECULAR SHEEN — desktop only, disabled on touch
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (finePointer) {
+    const tiltTargets = document.querySelectorAll('.project-card, .cert-card, #experience .liquid-glass.rounded-3xl, #game .liquid-glass');
+    tiltTargets.forEach(card => {
+      card.classList.add('tilt-card');
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -10;
+        const rotateY = ((x - centerX) / centerX) * 10;
+        card.style.transform = `perspective(1100px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.03, 1.03, 1.03)`;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1100px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    });
+  }
+  // STAGGERED CARD ENTRANCE
+  document.querySelectorAll('#projectsGrid .project-card, #newProjectsGrid .project-card, #certGrid .cert-card').forEach((el, i) => {
+    el.style.transitionDelay = ((i % 3) * 90) + 'ms';
+  });
+  // SUBTLE SCROLL PARALLAX FOR HERO (rAF, transform-only)
+  (function() {
+    const hero = document.getElementById('hero');
+    if (!hero) return;
+    let y = 0, raf = false;
+    function apply() {
+      raf = false;
+      hero.style.transform = `translate3d(0,${(y * 0.06).toFixed(1)}px,0)`;
+    }
+    addEventListener('scroll', () => {
+      y = window.scrollY;
+      if (y > 900) return;
+      if (!raf) { raf = true; requestAnimationFrame(apply); }
+    }, { passive: true });
+  })();
+  // Close mobile menu on link tap + on rotate/resize
+  document.querySelectorAll('#mobileMenu a').forEach(a => a.addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.add('hidden');
+  }));
+  window.addEventListener('orientationchange', () => setTimeout(() => window.dispatchEvent(new Event('resize')), 100));
+
+  // PHOTO: persist uploaded portrait + try multiple filenames, sync hero/about
+  (function() {
+    const KEY = 'suhaas-photo-data';
+    const hero = document.getElementById('heroPhoto');
+    const about = document.getElementById('aboutPhoto');
+    const saved = (() => { try { return localStorage.getItem(KEY); } catch(e){ return null; } })();
+    if (saved) {
+      [hero, about].forEach(img => {
+        if (!img) return;
+        img.src = saved;
+        img.style.display = 'block';
+      });
+      ['heroPhotoFallback','aboutPhotoFallback'].forEach(id => {
+        const f = document.getElementById(id);
+        if (f) f.style.display = 'none';
+      });
+    } else {
+      const candidates = ['suhaas-photo.jpg','suhaas-photo.jpeg','suhaas-photo.png','photo.jpg','profile.jpg','suhaas.jpg'];
+      function tryNext(img, i) {
+        if (!img || i >= candidates.length) return;
+        if (img.dataset.loaded === '1') return;
+        const test = new Image();
+        test.onload = () => {
+          if (img.dataset.loaded === '1') return;
+          img.dataset.loaded = '1';
+          img.src = candidates[i];
+          img.style.display = 'block';
+          const fb = img.id === 'heroPhoto' ? document.getElementById('heroPhotoFallback') : document.getElementById('aboutPhotoFallback');
+          if (fb) fb.style.display = 'none';
+          const other = img.id === 'heroPhoto' ? about : hero;
+          if (other && !other.dataset.loaded) {
+            other.dataset.loaded = '1';
+            other.src = candidates[i];
+            other.style.display = 'block';
+            const ofb = other.id === 'heroPhoto' ? document.getElementById('heroPhotoFallback') : document.getElementById('aboutPhotoFallback');
+            if (ofb) ofb.style.display = 'none';
+          }
+        };
+        test.onerror = () => tryNext(img, i + 1);
+        test.src = candidates[i];
+      }
+      if (hero && !saved) tryNext(hero, 1);
+    }
+    document.querySelectorAll('.photoUpload').forEach(input => {
+      input.addEventListener('change', () => {
+        const f = input.files && input.files[0];
+        if (!f) return;
+        const r = new FileReader();
+        r.onload = () => {
+          try { localStorage.setItem(KEY, r.result); } catch(e){}
+          [hero, about].forEach(img => {
+            if (!img) return;
+            img.dataset.loaded = '1';
+            img.src = r.result;
+            img.style.display = 'block';
+          });
+          ['heroPhotoFallback','aboutPhotoFallback'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+          });
+        };
+        r.readAsDataURL(f);
+      });
+    });
+  })();
+
+  </script>
+<script>
+  // SNAKE ARCADE — standalone script so the game runs even if other scripts fail
+  (function() {
+    const cv = document.getElementById('snake');
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const N = 20, CELL = cv.width / N;
+    const scoreEl = document.getElementById('snakeScore');
+    const bestEl = document.getElementById('snakeBest');
+    const speedEl = document.getElementById('snakeSpeed');
+    const overlay = document.getElementById('snakeOverlay');
+    const ovTitle = document.getElementById('snakeOverlayTitle');
+    const ovScore = document.getElementById('snakeOverlayScore');
+    let snake, dir, nextDir, food, score, best = 0, timer = null, stepMs = 140, alive = false, started = false;
+    try { best = parseInt(localStorage.getItem('snake-best') || '0', 10) || 0; } catch(e){}
+    if (bestEl) bestEl.textContent = best;
+    function placeFood() {
+      while (true) {
+        const f = { x: (Math.random() * N) | 0, y: (Math.random() * N) | 0 };
+        if (!snake.some(s => s.x === f.x && s.y === f.y)) return f;
+      }
+    }
+    function reset() {
+      snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
+      dir = { x: 1, y: 0 }; nextDir = dir;
+      score = 0; stepMs = 140;
+      food = placeFood();
+      if (scoreEl) scoreEl.textContent = '0';
+      if (speedEl) speedEl.textContent = '1×';
+      hideOverlay();
+      draw(0);
+    }
+    function showOverlay(title, sub) {
+      if (!overlay) return;
+      if (ovTitle) ovTitle.textContent = title;
+      if (ovScore) ovScore.textContent = sub;
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+    }
+    function hideOverlay() {
+      if (!overlay) return;
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+    }
+    function draw(t) {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, cv.width, cv.height);
+      ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+      ctx.lineWidth = 1;
+      for (let i = 1; i < N; i++) {
+        ctx.beginPath(); ctx.moveTo(i * CELL + .5, 0); ctx.lineTo(i * CELL + .5, cv.height); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, i * CELL + .5); ctx.lineTo(cv.width, i * CELL + .5); ctx.stroke();
+      }
+      const pulse = 0.6 + 0.4 * Math.sin((t || 0) / 180);
+      ctx.save();
+      ctx.shadowColor = '#fff'; ctx.shadowBlur = 14 * pulse;
+      ctx.fillStyle = '#fff';
+      const fx = food.x * CELL, fy = food.y * CELL;
+      const pad = 3 + pulse;
+      ctx.fillRect(fx + pad, fy + pad, CELL - pad * 2, CELL - pad * 2);
+      ctx.restore();
+      snake.forEach((s, i) => {
+        const v = 1 - (i / snake.length) * 0.65;
+        ctx.fillStyle = i === 0 ? '#fff' : `rgba(255,255,255,${v.toFixed(2)})`;
+        if (i === 0) { ctx.shadowColor = '#fff'; ctx.shadowBlur = 12; } else ctx.shadowBlur = 0;
+        ctx.fillRect(s.x * CELL + 1.5, s.y * CELL + 1.5, CELL - 3, CELL - 3);
+      });
+      ctx.shadowBlur = 0;
+    }
+    function tick() {
+      dir = nextDir;
+      const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+      if (head.x < 0 || head.y < 0 || head.x >= N || head.y >= N || snake.some(s => s.x === head.x && s.y === head.y)) return gameOver();
+      snake.unshift(head);
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        if (scoreEl) scoreEl.textContent = score;
+        if (score > best) { best = score; try { localStorage.setItem('snake-best', String(best)); } catch(e){} if (bestEl) bestEl.textContent = best; }
+        if (score % 5 === 0 && stepMs > 70) {
+          stepMs -= 12;
+          if (speedEl) speedEl.textContent = (140 / stepMs).toFixed(1) + '×';
+          restartLoop();
+        }
+        food = placeFood();
+      } else snake.pop();
+      draw(performance.now());
+    }
+    function loop() { if (alive) tick(); }
+    function restartLoop() { if (timer) clearInterval(timer); timer = setInterval(loop, stepMs); }
+    function start() {
+      if (!started) started = true;
+      if (alive) return;
+      if (!snake || over) reset();
+      over = false;
+      alive = true; hideOverlay(); restartLoop();
+    }
+    function pause() {
+      if (!alive) return;
+      alive = false;
+      if (timer) clearInterval(timer);
+      showOverlay('PAUSED', 'Score ' + score + ' — tap Start to resume');
+    }
+    let over = false, userHold = false;
+    function gameOver() {
+      alive = false; over = true;
+      if (timer) clearInterval(timer);
+      showOverlay('GAME OVER', 'Score ' + score + ' · Best ' + best);
+    }
+    function steer(x, y) {
+      userHold = false;
+      if (x === -dir.x && y === -dir.y) return;
+      if (x === dir.x && y === dir.y) return;
+      nextDir = { x, y };
+      if (started && !alive && snake) start();
+    }
+    document.getElementById('snakeStart').addEventListener('click', () => { userHold = false; start(); });
+    document.getElementById('snakePause').addEventListener('click', () => { if (alive) { userHold = true; pause(); } else { userHold = false; start(); } });
+    document.getElementById('snakeRestart').addEventListener('click', () => { reset(); start(); });
+    document.querySelectorAll('[data-dir]').forEach(b => b.addEventListener('click', () => {
+      const d = b.getAttribute('data-dir');
+      if (d === 'up') steer(0, -1);
+      if (d === 'down') steer(0, 1);
+      if (d === 'left') steer(-1, 0);
+      if (d === 'right') steer(1, 0);
+    }));
+    addEventListener('keydown', e => {
+      const k = e.key.toLowerCase();
+      const map = { arrowup: [0,-1], w: [0,-1], arrowdown: [0,1], s: [0,1], arrowleft: [-1,0], a: [-1,0], arrowright: [1,0], d: [1,0] };
+      if (map[k]) {
+        const r = cv.getBoundingClientRect();
+        const over = document.activeElement === document.body;
+        if (over) e.preventDefault();
+        steer(map[k][0], map[k][1]);
+      } else if (k === ' ' || k === 'enter') {
+        if (document.activeElement === document.body) { e.preventDefault(); alive ? pause() : start(); }
+      }
+    });
+    let tx = 0, ty = 0;
+    cv.addEventListener('touchstart', e => { const t = e.changedTouches[0]; tx = t.clientX; ty = t.clientY; }, { passive: true });
+    cv.addEventListener('touchend', e => {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - tx, dy = t.clientY - ty;
+      if (Math.abs(dx) < 18 && Math.abs(dy) < 18) return;
+      if (Math.abs(dx) > Math.abs(dy)) steer(dx > 0 ? 1 : -1, 0);
+      else steer(0, dy > 0 ? 1 : -1);
+    }, { passive: true });
+    cv.addEventListener('pointerdown', () => { if (started && !alive && snake) start(); });
+    reset();
+    showOverlay('SNAKE', 'Auto-starting… arrows / WASD / swipe');
+    // AUTO-RUN: start as soon as the arcade is visible; pause off-screen; timed fallback
+    (function autoPlay() {
+      const sec = document.getElementById('game');
+      function inView() {
+        if (!sec) return true;
+        const r = sec.getBoundingClientRect();
+        return r.top < innerHeight * 0.85 && r.bottom > innerHeight * 0.15;
+      }
+      setTimeout(() => { if (!started && inView()) start(); }, 600);
+      setTimeout(() => { if (!started) start(); }, 4000);
+      if (!sec || !('IntersectionObserver' in window)) return;
+      new IntersectionObserver(es => {
+        const vis = es[0].isIntersecting;
+        if (vis && (!started || (!alive && !userHold))) start();
+        else if (!vis && alive) pause();
+      }, { threshold: 0.2 }).observe(sec);
+    })();
+  })();
+</script>
+
+
+
+
+
+
+
+
+</body></html>
